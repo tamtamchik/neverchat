@@ -1,9 +1,9 @@
 /* globals define */
 define(function(require, exports, module) {
 
-  function dweet() {
+  function dweet(thingName) {
     var
-      _thing = 'famous-dweet',
+      _thing = thingName,
       _feedUrl = 'https://dweet.io:443/get/dweets/for/' + _thing + '?callback',
       _postUrl = 'https://dweet.io:443/dweet/for/' + _thing;
 
