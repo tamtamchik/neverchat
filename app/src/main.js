@@ -110,7 +110,7 @@ define(function(require, exports, module) {
       var surface = new MessageBox({
         classes: ['message'],
         content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user) +
-          '?s=200&d=identicon"><div class="item">' +
+          '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
           '<span class="message-text">' + msg.content.message +
           '</span></div>' ,
         size: [undefined, 60]

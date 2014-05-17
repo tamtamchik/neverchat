@@ -56,8 +56,17 @@ div.message {
   font-weight: 300;
 }
 
+div.message > i {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.6);
+  top: 15px;
+  left: 69px;
+  width: 6px;
+  overflow: hidden;
+}
+
 .item .message-text {
-  margin: 5px 15px 0 60px;
+  margin: 5px 0 0 60px;
   line-height: 1.6em;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 4px;
