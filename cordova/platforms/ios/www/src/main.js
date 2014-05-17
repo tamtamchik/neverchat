@@ -36,7 +36,7 @@ define(function(require, exports, module) {
     function createLayout() {
       layout = new HeaderFooterLayout({
         headerSize: 75,
-        footerSize: 40
+        footerSize: 41
       });
 
       mainContext.add(layout);
@@ -60,12 +60,15 @@ define(function(require, exports, module) {
 
     function addFooter() {
       input = new Surface({
-        content: '<div class="main-input-wrapper"><input id="main-input" type="text"></div>',
+        content: '<div class="main-input-wrapper">' +
+          '<input id="main-input" placeholder="tap to write message" type="text"></div>',
         classes: ['footer']
       });
       input.on('keydown', function(e) {
         if (e.which == 13) {
-          dweets.getFeed(loadMessages);
+          var msg = e.srcElement.value;
+          dweets.sendMessage(msg,"yuri@progforce.com", loadMessages);
+          e.srcElement.value = "";
         }
       });
       layout.footer.add(input);
@@ -79,7 +82,7 @@ define(function(require, exports, module) {
       scrollView.sequenceFrom(messages);
 
       dweets.getFeed(loadMessages);
-      setInterval(function(){dweets.getFeed(loadMessages)},500 * 100);
+      setInterval(function(){dweets.getFeed(loadMessages)}, 500 * 2);
     }
 
     function loadMessages(res) {
@@ -88,9 +91,18 @@ define(function(require, exports, module) {
         for (var item in res.with.reverse()) {
           var created = new Date(res.with[item].created);
           if (latestMessageDate < created) {
-            messagesRaw.push(res.with[item]);
+            var item = {
+              loaded: false,
+              item: res.with[item]
+            }
+            messagesRaw.push(item);
             latestMessageDate = created;
-            renderMessage(res.with[item]);
+          }
+        }
+        for (var item in messagesRaw) {
+          if (!messagesRaw[item].loaded) {
+            renderMessage(messagesRaw[item].item);
+            messagesRaw[item].loaded = true;
           }
         }
       } else {
@@ -98,25 +110,18 @@ define(function(require, exports, module) {
       }
     }
 
-//     identicon: a geometric pattern based on an email hash
-// monsterid: a generated 'monster' with different colors, faces, etc
-// wavatar: generated faces with differing features and backgrounds
-// retro: awesome generated, 8-bit arcade-style pixelated faces
-// blank: a transparent PNG image (border added to HTML below for demonstration purposes)
-
-
     function renderMessage(msg) {
-      msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
+      // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
       var surface = new MessageBox({
-        classes: ['message'],
+        classes: ['message','message-wrapper'],
         content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user) +
           '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
           '<span class="message-text">' + msg.content.message +
-          '</span></div>' ,
-        size: [undefined, 60]
+          '&nbsp;</span></div>' ,
+        size: [undefined, 66]
       });
       surface.pipe(scrollView);
       messages.push(surface);
+      scrollView.setPosition(20000);
     }
-
 });

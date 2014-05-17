@@ -11,14 +11,22 @@ define(function(require, exports, module) {
       getFeed: function(callback) {
         JSONP(_feedUrl, callback)
       },
-      sendMessage: function(message, user, uid, callback) {
+      sendMessage: function(message, user, callback) {
+        var params = {
+          "message": message,
+          "user": user
+        };
+
         var r = new XMLHttpRequest();
         r.open('POST', _postUrl, true);
+        r.setRequestHeader("Content-length", params.length);
+        r.setRequestHeader("Connection", "close");
+        r.setRequestHeader("Content-Type", "application/json");
         r.onreadystatechange = function () {
           if (r.readyState != 4 || r.status != 200) return;
           callback();
         };
-        r.send('message=' + message + '&user=' + user + '&uid=' + uid);
+        r.send(JSON.stringify(params));
       }
     }
   }
