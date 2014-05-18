@@ -65,9 +65,7 @@ define(function(require) {
             channel += ch.value;
             dweets = new Dweet(channel);
             dweets.getFeed(loadMessages);
-            setInterval(function(){
-              dweets.getFeed(loadMessages);}
-            , 500 * 4);
+            setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
             loginModifier.setTransform(
               Transform.translate(900000, 90000, 0),
               { duration : 0 }
@@ -148,10 +146,10 @@ define(function(require) {
           }
         }
 
-        for (var item in messagesRaw) {
-          if (!messagesRaw[item].loaded) {
-            renderMessage(messagesRaw[item].item);
-            messagesRaw[item].loaded = true;
+        for (var msg in messagesRaw) {
+          if (!messagesRaw[msg].loaded) {
+            renderMessage(messagesRaw[msg].item);
+            messagesRaw[msg].loaded = true;
           }
         }
       }
