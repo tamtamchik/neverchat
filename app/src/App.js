@@ -38,6 +38,11 @@ define(function(require) {
     initialMessages();
     enterEmail();
 
+    function _validateEmail(email) {
+      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+
     function enterEmail(){
       loginModifier = new StateModifier({
         origin: [1,0]
@@ -55,7 +60,7 @@ define(function(require) {
         if (e.target.type === 'button') {
           var id = document.getElementById('main-input-email');
           var ch = document.getElementById('main-input-channel');
-          if(id.value !== '') {
+          if(id.value !== '' && _validateEmail(id.value)) {
             email = id.value;
             channel += ch.value;
             dweets = new Dweet(channel);
