@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, JSONP */
 define(function(require, exports, module) {
 
   function DweetAdapter(thingName) {
@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 
     return {
       getFeed: function(callback) {
-        JSONP(_feedUrl, callback)
+        JSONP(_feedUrl, callback);
       },
       sendMessage: function(message, user, callback) {
         var params = {
@@ -23,12 +23,12 @@ define(function(require, exports, module) {
         r.setRequestHeader("Connection", "close");
         r.setRequestHeader("Content-Type", "application/json");
         r.onreadystatechange = function () {
-          if (r.readyState != 4 || r.status != 200) return;
+          if (r.readyState !== 4 || r.status !== 200) { return; }
           callback();
         };
         r.send(JSON.stringify(params));
       }
-    }
+    };
   }
 
   module.exports = DweetAdapter;
