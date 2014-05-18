@@ -1,5 +1,5 @@
-/* globals define */
-define(function(require, exports, module) {
+/* globals define, md5 */
+define(function(require) {
     'use strict';
     // import dependencies
     var Engine              = require('famous/core/Engine');
@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
     // create the main context
     var mainContext = Engine.createContext();
-    mainContext.setPerspective(1)
+    mainContext.setPerspective(1);
 
     var layout;
     var scrollView;
@@ -52,15 +52,17 @@ define(function(require, exports, module) {
         classes: ['email-wrapper'],
       });
       loginSurface.on('click', function(e){
-        if (e.target.type == 'button') {
+        if (e.target.type === 'button') {
           var id = document.getElementById('main-input-email');
           var ch = document.getElementById('main-input-channel');
-          if(id.value != '') {
+          if(id.value !== '') {
             email = id.value;
             channel += ch.value;
             dweets = new Dweet(channel);
             dweets.getFeed(loadMessages);
-            setInterval(function(){dweets.getFeed(loadMessages)}, 500 * 4);
+            setInterval(function(){
+              dweets.getFeed(loadMessages);}
+            , 500 * 4);
             loginModifier.setTransform(
               Transform.translate(900000, 90000, 0),
               { duration : 0 }
@@ -69,7 +71,7 @@ define(function(require, exports, module) {
             id.className = 'error';
           }
         }
-      })
+      });
       mainContext.add(loginModifier).add(loginSurface);
     }
 
@@ -105,7 +107,7 @@ define(function(require, exports, module) {
         classes: ['footer']
       });
       input.on('keydown', function(e) {
-        if (e.which == 13 && e.srcElement.value != '') {
+        if (e.which === 13 && e.srcElement.value !== '') {
           var msg = e.srcElement.value;
           dweets.sendMessage(msg, email, loadMessages);
           e.srcElement.value = "";
@@ -126,27 +128,27 @@ define(function(require, exports, module) {
     }
 
     function loadMessages(res) {
-      if (res.this != 'failed') {
-        console.log('Request success.')
-        for (var item in res.with.reverse()) {
-          var created = new Date(res.with[item].created);
-          if (latestMessageDate < created) {
-            var item = {
-              loaded: false,
-              item: res.with[item]
+      if (res.this !== 'failed') {
+        if res.hasOwnProperty('with'){
+          for (var item in res.with.reverse()) {
+            var created = new Date(res.with[item].created);
+            if (latestMessageDate < created) {
+              var it = {
+                loaded: false,
+                item: res.with[item]
+              };
+              messagesRaw.push(it);
+              latestMessageDate = created;
             }
-            messagesRaw.push(item);
-            latestMessageDate = created;
           }
         }
+
         for (var item in messagesRaw) {
           if (!messagesRaw[item].loaded) {
             renderMessage(messagesRaw[item].item);
             messagesRaw[item].loaded = true;
           }
         }
-      } else {
-        console.log('Request failed.')
       }
     }
 
