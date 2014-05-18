@@ -1,7 +1,7 @@
 /* globals define */
 define(function(require, exports, module) {
 
-  function dweet(thingName) {
+  function DweetAdapter(thingName) {
     var
       _thing = thingName,
       _feedUrl = 'https://dweet.io:443/get/dweets/for/' + _thing + '?callback',
@@ -31,5 +31,5 @@ define(function(require, exports, module) {
     }
   }
 
-  module.exports = dweet;
+  module.exports = DweetAdapter;
 });

@@ -13,8 +13,7 @@ define(function(require, exports, module) {
     var StateModifier       = require('famous/modifiers/StateModifier');
 
     var MessageBox          = require('MessageBox');
-
-    var Dweet = require('dweet');
+    var Dweet               = require('DweetAdapter');
 
     // create the main context
     var mainContext = Engine.createContext();
