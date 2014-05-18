@@ -1,8 +1,8 @@
+/* globals define */
 define(function(require, exports, module) {
     var Surface           = require('famous/core/Surface');
-    var EventHandler      = require('famous/core/EventHandler');
 
-    function MessageBox(options) {
+    function MessageBox() {
         this.messageHeight = 0;
         Surface.apply(this, arguments);
         this._superDeploy = Surface.prototype.deploy;
