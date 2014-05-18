@@ -129,7 +129,7 @@ define(function(require) {
 
     function loadMessages(res) {
       if (res.this !== 'failed') {
-        if res.hasOwnProperty('with'){
+        if (res.hasOwnProperty('with')) {
           for (var item in res.with.reverse()) {
             var created = new Date(res.with[item].created);
             if (latestMessageDate < created) {
@@ -156,7 +156,7 @@ define(function(require) {
       // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
       var surface = new MessageBox({
         classes: ['message','message-wrapper'],
-        content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user) +
+        content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user.toString()) +
           '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
           '<span class="message-text">' + msg.content.message +
           '&nbsp;</span></div>' ,
