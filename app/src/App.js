@@ -65,7 +65,7 @@ define(function(require) {
       var times = document.getElementsByClassName('timeago');
       for (var i = times.length - 1; i >= 0; i--) {
         times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
-          timeago(parseInt(times[i].attributes['date'].value))
+          timeago(parseInt(times[i].attributes.date.value))
       };
     }
 
