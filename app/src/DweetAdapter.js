@@ -17,6 +17,8 @@ define(function(require, exports, module) {
           "user": user
         };
 
+        params = JSON.stringify(params);
+
         var r = new XMLHttpRequest();
         r.open('POST', _postUrl, true);
         r.setRequestHeader("Content-length", params.length);
@@ -26,7 +28,7 @@ define(function(require, exports, module) {
           if (r.readyState !== 4 || r.status !== 200) { return; }
           callback();
         };
-        r.send(JSON.stringify(params));
+        r.send(params);
       }
     };
   }

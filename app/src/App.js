@@ -43,6 +43,24 @@ define(function(require) {
       return re.test(email);
     }
 
+    function login(e){
+      var id = document.getElementById('main-input-email');
+      var ch = document.getElementById('main-input-channel');
+      if(id.value !== '' && _validateEmail(id.value)) {
+        email = id.value;
+        channel += ch.value;
+        dweets = new Dweet(channel);
+        dweets.getFeed(loadMessages);
+        setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
+        loginModifier.setTransform(
+          Transform.translate(900000, 90000, 0),
+          { duration : 0 }
+        );
+      } else {
+        id.className = 'error';
+      }
+    }
+
     function enterEmail(){
       loginModifier = new StateModifier({
         origin: [1,0]
@@ -52,27 +70,18 @@ define(function(require) {
           '<div class="email-title">Welcome to Foreverchat!</div>' +
           '<input id="main-input-email" placeholder="enter email" type="text">' +
           '<input id="main-input-channel" placeholder="enter channel (optional)" type="text">' +
-          '<input id="main-input-save" value="Save" type="button">' +
+          '<div id="main-input-save" class="button">Enter</div>' +
           '</div>',
         classes: ['email-wrapper'],
       });
+      loginSurface.on('keydown', function(e) {
+        if (e.which === 13 && e.srcElement.value !== '') {
+          login(e);
+        }
+      });
       loginSurface.on('click', function(e){
-        if (e.target.type === 'button') {
-          var id = document.getElementById('main-input-email');
-          var ch = document.getElementById('main-input-channel');
-          if(id.value !== '' && _validateEmail(id.value)) {
-            email = id.value;
-            channel += ch.value;
-            dweets = new Dweet(channel);
-            dweets.getFeed(loadMessages);
-            setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
-            loginModifier.setTransform(
-              Transform.translate(900000, 90000, 0),
-              { duration : 0 }
-            );
-          } else {
-            id.className = 'error';
-          }
+        if (e.target.className === 'button') {
+          login(e);
         }
       });
       mainContext.add(loginModifier).add(loginSurface);
@@ -131,42 +140,41 @@ define(function(require) {
     }
 
     function loadMessages(res) {
-      if (res.this !== 'failed') {
-        if (res.hasOwnProperty('with')) {
-          for (var item in res.with.reverse()) {
-            var created = new Date(res.with[item].created);
-            if (latestMessageDate < created) {
-              var it = {
-                loaded: false,
-                item: res.with[item]
-              };
-              messagesRaw.push(it);
-              latestMessageDate = created;
-            }
+      if (res && res.this !== 'failed') {
+        for (var i = res.with.length - 1; i >= 0; i--) {
+          var created = new Date(res.with[i].created);
+          if (latestMessageDate < created) {
+            var it = {
+              loaded: false,
+              item: res.with[i]
+            };
+            messagesRaw.push(it);
+            latestMessageDate = created;
           }
         }
-
-        for (var msg in messagesRaw) {
-          if (!messagesRaw[msg].loaded) {
-            renderMessage(messagesRaw[msg].item);
-            messagesRaw[msg].loaded = true;
+        for (var i = 0; i < messagesRaw.length; i++) {
+          if (messagesRaw[i].loaded === false) {
+            renderMessage(messagesRaw[i].item);
+            messagesRaw[i].loaded = true;
           }
         }
       }
     }
 
     function renderMessage(msg) {
-      // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
-      var surface = new MessageBox({
-        classes: ['message','message-wrapper'],
-        content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user.toString()) +
-          '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
-          '<span class="message-text">' + msg.content.message +
-          '&nbsp;</span></div>' ,
-        size: [undefined, 66]
-      });
-      surface.pipe(scrollView);
-      messages.push(surface);
-      scrollView.setPosition(20000);
+      if (msg) {
+        // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
+        var surface = new MessageBox({
+          classes: ['message','message-wrapper'],
+          content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user.toString()) +
+            '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
+            '<span class="message-text">' + msg.content.message +
+            '&nbsp;</span></div>' ,
+          size: [undefined, 66]
+        });
+        surface.pipe(scrollView);
+        messages.push(surface);
+        scrollView.setPosition(20000);
+      }
     }
 });

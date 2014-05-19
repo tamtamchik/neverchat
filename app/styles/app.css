@@ -62,9 +62,17 @@ html {
 }
 
 #main-input-save {
-  width: 300px;
+  width: 286px;
   background: rgba(255, 255, 255, 0.33);
-  height: 32px;
+  height: 26px;
+  text-align: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
 }
 
 .footer {
