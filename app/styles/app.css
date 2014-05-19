@@ -106,7 +106,7 @@ div.message {
 div.message > i {
   position: absolute;
   color: rgba(255, 255, 255, 0.6);
-  top: 15px;
+  top: 16px;
   left: 69px;
   width: 6px;
   overflow: hidden;
@@ -160,4 +160,12 @@ input:-moz-placeholder { color:rgba(255, 255, 255, 0.33); }
 
 #main-input-email.error {
   border: 2px solid rgba(255, 100, 100, 0.33);
+}
+
+.timeago {
+  font-size: 10px;
+  color: white;
+  float: right;
+  line-height: 16px;
+  font-weight: 400;
 }
