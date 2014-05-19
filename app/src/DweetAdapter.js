@@ -1,4 +1,4 @@
-/* globals define, JSONP */
+/* globals define, JSONP, md5 */
 define(function(require, exports, module) {
 
   function DweetAdapter(thingName) {
@@ -14,7 +14,7 @@ define(function(require, exports, module) {
       sendMessage: function(message, user, callback) {
         var params = {
           "message": message,
-          "user": user
+          "user": md5(user.toString())
         };
 
         params = JSON.stringify(params);

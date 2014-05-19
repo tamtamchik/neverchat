@@ -1,4 +1,4 @@
-/* globals define, md5 */
+/* globals define */
 define(function(require) {
     'use strict';
     // import dependencies
@@ -166,7 +166,7 @@ define(function(require) {
         // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
         var surface = new MessageBox({
           classes: ['message','message-wrapper'],
-          content: '<img class="author" src="http://www.gravatar.com/avatar/' + md5(msg.content.user.toString()) +
+          content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
             '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
             '<span class="message-text">' + msg.content.message +
             '&nbsp;</span></div>' ,
