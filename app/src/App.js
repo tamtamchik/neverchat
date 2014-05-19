@@ -51,7 +51,7 @@ define(function(require) {
         channel += ch.value;
         dweets = new Dweet(channel);
         dweets.getFeed(loadMessages);
-        // setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
+        setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
         loginModifier.setTransform(
           Transform.translate(900000, 90000, 0),
           { duration : 0 }
@@ -59,6 +59,14 @@ define(function(require) {
       } else {
         id.className = 'error';
       }
+    }
+
+    function updateDates() {
+      var times = document.getElementsByClassName('timeago');
+      for (var i = times.length - 1; i >= 0; i--) {
+        times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
+          timeago(parseInt(times[i].attributes['date'].value))
+      };
     }
 
     function timeago(time, local){
@@ -77,7 +85,7 @@ define(function(require) {
         YEAR   = 31556926,
         DECADE = 315569260;
 
-      if (offset <= MINUTE)              span = [ '', 'moments' ];
+      if (offset <= MINUTE)              span = [ Math.round(offset), 'seconds' ];
       else if (offset < (MINUTE * 60))   span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
       else if (offset < (HOUR * 24))     span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
       else if (offset < (DAY * 7))       span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
@@ -189,6 +197,7 @@ define(function(require) {
             messagesRaw[i].loaded = true;
           }
         }
+        updateDates();
       }
     }
 
@@ -200,7 +209,7 @@ define(function(require) {
           content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
             '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
             '<span class="message-text">' + msg.content.message +
-            '&nbsp;</span><span class="timeago"><i class="fa fa-clock-o"></i> ' + timeago(new Date(msg.created).getTime()) + '</span></div>' ,
+            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + timeago(new Date(msg.created).getTime()) + '</span></div>' ,
           size: [undefined, 66]
         });
         surface.pipe(scrollView);
