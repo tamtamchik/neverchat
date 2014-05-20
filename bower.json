@@ -1,8 +1,8 @@
 {
-  "name": "foreverchat",
-  "description": "Chat that lasts forever... simple as that. Based on Dweet.io.",
+  "name": "neverchat",
+  "description": "Anonymous chat application. Based on http://dweet.io",
   "version": "0.1.0",
-  "homepage": "https://github.com/tamtamchik/foreverchat",
+  "homepage": "https://github.com/tamtamchik/neverchat",
   "authors": [{
     "name": "Yuri Tkachenko",
     "url": "http://github.com/tamtamchik/"

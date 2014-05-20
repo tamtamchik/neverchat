@@ -25,7 +25,7 @@ define(function(require, exports, module) {
     if (!this.newMessage) {
       target.classList.add('new-message');
 
-      setTimeout(function(){
+      setTimeout(function() {
         target.classList.remove('new-message');
       },5000);
       this.newMessage = true;
