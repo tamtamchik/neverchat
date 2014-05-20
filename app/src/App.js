@@ -51,7 +51,7 @@ define(function(require) {
       var offset = Math.abs((local - time)/1000);
       var span   = [];
 
-      if (offset <= MINUTE) {
+      if (offset <= 60) {
         span = [ Math.round(offset), 'seconds' ];
       }
       else if (offset < (60 * 60)) {
