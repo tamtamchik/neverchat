@@ -1,6 +1,10 @@
-/* globals define */
+/* globals define, Base64, md5 */
 define(function(require) {
     'use strict';
+
+    // import other dependencies
+    require('js-base64');
+
     // import dependencies
     var Engine              = require('famous/core/Engine');
     var RenderNode          = require('famous/core/RenderNode');
@@ -26,103 +30,131 @@ define(function(require) {
     var latestMessageDate = new Date(-1);
     var dweets;
     var email;
-    var channel = 'famous-dweet';
+    var channel = 'neverchat_';
     var input;
     var loginSurface;
     var loginModifier;
-    var chatHeight = 0;
-
-    createLayout();
-    addHeader();
-    addContent();
-    addFooter();
-    initialMessages();
-    enterEmail();
 
     function _validateEmail(email) {
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     }
 
-    function login(e){
-      var id = document.getElementById('main-input-email');
-      var ch = document.getElementById('main-input-channel');
-      if(id.value !== '' && _validateEmail(id.value)) {
-        email = id.value;
-        channel += ch.value;
-        dweets = new Dweet(channel);
-        dweets.getFeed(loadMessages);
-        setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 2);
-        loginModifier.setTransform(
-          Transform.translate(900000, 90000, 0),
-          { duration : 0 }
-        );
-      } else {
-        id.className = 'error';
-      }
-    }
+    function _timeago(time, local) {
+      if (!local) local = Date.now();
+      if (typeof time !== 'number' || typeof local !== 'number') return;
 
-    function updateDates() {
-      var times = document.getElementsByClassName('timeago');
-      for (var i = times.length - 1; i >= 0; i--) {
-        times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
-          timeago(parseInt(times[i].attributes.date.value))
-      };
-    }
+      var offset = Math.abs((local - time)/1000);
+      var span   = [];
+      var MINUTE = 60;
+      var HOUR   = 3600;
+      var DAY    = 86400;
+      var WEEK   = 604800;
+      var YEAR   = 31556926;
 
-    function timeago(time, local){
-      (!local) && (local = Date.now());
-      if (typeof time !== 'number' || typeof local !== 'number') {
-        return;
-      }
-      var
-        offset = Math.abs((local - time)/1000),
-        span   = [],
-        MINUTE = 60,
-        HOUR   = 3600,
-        DAY    = 86400,
-        WEEK   = 604800,
-        MONTH  = 2629744,
-        YEAR   = 31556926,
-        DECADE = 315569260;
+      var result = '';
 
-      if (offset <= MINUTE)              span = [ Math.round(offset), 'seconds' ];
-      else if (offset < (MINUTE * 60))   span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
-      else if (offset < (HOUR * 24))     span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
-      else if (offset < (DAY * 7))       span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
-      else if (offset < (WEEK * 52))     span = [ Math.round(Math.abs(offset / WEEK)), 'week' ];
-      else if (offset < (YEAR * 10))     span = [ Math.round(Math.abs(offset / YEAR)), 'year' ];
-      else if (offset < (DECADE * 100))  span = [ Math.round(Math.abs(offset / DECADE)), 'decade' ];
-      else                               span = [ '', 'a long time' ];
+      if (offset <= MINUTE) span = [ Math.round(offset), 'seconds' ];
+      else if (offset < (MINUTE * 60)) span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
+      else if (offset < (HOUR * 24)) span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
+      else if (offset < (DAY * 7)) span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
+      else if (offset < (WEEK * 52)) span = [ Math.round(Math.abs(offset / WEEK)), 'week' ];
+      else if (offset < (YEAR * 10)) span = [ Math.round(Math.abs(offset / YEAR)), 'year' ];
+      else span = [ '', 'a long time' ];
 
       span[1] += (span[0] === 0 || span[0] > 1) ? 's' : '';
       span = span.join(' ');
 
-      return (time <= local)  ? span + ' ago' : 'in ' + span;
+      if (time <= local) result = span + ' ago';
+      else result = 'in ' + span;
+
+      return result;
     }
 
-    function enterEmail(){
+    function _renderMessage(msg) {
+      if (msg) {
+        var surface = new MessageBox({
+          classes: ['message','message-wrapper'],
+          content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
+            '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
+            '<span class="message-text">' + Base64.decode(msg.content.message) +
+            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + _timeago(new Date(msg.created).getTime()) + '</span></div>',
+          size: [undefined, 66]
+        });
+        surface.pipe(scrollView);
+        messages.push(surface);
+        scrollView.goToNextPage();
+        scrollView.goToNextPage();
+      }
+    }
+
+    function _updateDates() {
+      var times = document.getElementsByClassName('timeago');
+      for (var i = times.length - 1; i >= 0; i--)
+        times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
+          _timeago(parseInt(times[i].attributes.date.value));
+    }
+
+    function loadMessages(res) {
+      var i;
+      if (res && res.this !== 'failed') {
+        for (i = res.with.length - 1; i >= 0; i--) {
+          var created = new Date(res.with[i].created);
+          if (latestMessageDate < created) {
+            var it = {
+              loaded: false,
+              item: res.with[i]
+            };
+            messagesRaw.push(it);
+            latestMessageDate = created;
+          }
+        }
+        for (i = 0; i < messagesRaw.length; i++)
+          if (messagesRaw[i].loaded === false) {
+            _renderMessage(messagesRaw[i].item);
+            messagesRaw[i].loaded = true;
+          }
+        _updateDates();
+      }
+    }
+
+    function login(e) {
+      var id = document.getElementById('main-input-email');
+      var ch = document.getElementById('main-input-channel');
+      if (id.value !== '' && _validateEmail(id.value)) {
+        email = md5(id.value.toString());
+        channel += md5(ch.value.toString());
+        dweets = new Dweet(channel);
+        dweets.getFeed(loadMessages);
+        setInterval(function() {
+          dweets.getFeed(loadMessages);
+        }, 500 * 5);
+        loginModifier.setTransform(
+          Transform.translate(900000, 90000, 0),
+          { duration : 0 }
+        );
+      }
+      else id.className = 'error';
+    }
+
+    function enterEmail() {
       loginModifier = new StateModifier({
         origin: [1,0]
       });
       loginSurface = new Surface({
+        classes: ['email-wrapper'],
         content: '<div class="email-container">' +
           '<div class="email-title">neverchat.io</div>' +
           '<input id="main-input-email" placeholder="enter email" type="text">' +
           '<input id="main-input-channel" placeholder="enter room (optional)" type="text">' +
           '<div id="main-input-save" class="button">Enter</div>' +
-          '</div>',
-        classes: ['email-wrapper'],
+          '</div>'
       });
       loginSurface.on('keydown', function(e) {
-        if (e.which === 13 && e.srcElement.value !== '') {
-          login(e);
-        }
+        if (e.which === 13 && e.srcElement.value !== '') login(e);
       });
-      loginSurface.on('click', function(e){
-        if (e.target.className === 'button') {
-          login(e);
-        }
+      loginSurface.on('click', function(e) {
+        if (e.target.className === 'button') login(e);
       });
       mainContext.add(loginModifier).add(loginSurface);
     }
@@ -153,6 +185,7 @@ define(function(require) {
     }
 
     function addFooter() {
+      var that = this;
       input = new Surface({
         content: '<div class="main-input-wrapper">' +
           '<input id="main-input" placeholder="tap to write message" type="text"></div>',
@@ -161,8 +194,8 @@ define(function(require) {
       input.on('keydown', function(e) {
         if (e.which === 13 && e.srcElement.value !== '') {
           var msg = e.srcElement.value;
-          dweets.sendMessage(msg, email, loadMessages);
-          e.srcElement.value = "";
+          dweets.sendMessage(Base64.encode(msg), email, loadMessages.bind(that));
+          e.srcElement.value = '';
         }
       });
       layout.footer.add(input);
@@ -175,43 +208,10 @@ define(function(require) {
       scrollView.sequenceFrom(messages);
     }
 
-    function loadMessages(res) {
-      if (res && res.this !== 'failed') {
-        for (var i = res.with.length - 1; i >= 0; i--) {
-          var created = new Date(res.with[i].created);
-          if (latestMessageDate < created) {
-            var it = {
-              loaded: false,
-              item: res.with[i]
-            };
-            messagesRaw.push(it);
-            latestMessageDate = created;
-          }
-        }
-        for (var i = 0; i < messagesRaw.length; i++) {
-          if (messagesRaw[i].loaded === false) {
-            renderMessage(messagesRaw[i].item);
-            messagesRaw[i].loaded = true;
-          }
-        }
-        updateDates();
-      }
-    }
-
-    function renderMessage(msg) {
-      if (msg) {
-        var surface = new MessageBox({
-          classes: ['message','message-wrapper'],
-          content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
-            '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
-            '<span class="message-text">' + msg.content.message +
-            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + timeago(new Date(msg.created).getTime()) + '</span></div>' ,
-          size: [undefined, 66]
-        });
-        surface.pipe(scrollView);
-        messages.push(surface);
-        scrollView.goToNextPage();
-        scrollView.goToNextPage();
-      }
-    }
+    createLayout();
+    addHeader();
+    addContent();
+    addFooter();
+    initialMessages();
+    enterEmail();
 });

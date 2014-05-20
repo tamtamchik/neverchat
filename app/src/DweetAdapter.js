@@ -12,9 +12,10 @@ define(function(require, exports, module) {
         JSONP(_feedUrl, callback);
       },
       sendMessage: function(message, user, callback) {
+        var that = this;
         var params = {
           "message": message,
-          "user": md5(user.toString())
+          "user": user
         };
 
         params = JSON.stringify(params);
@@ -26,7 +27,7 @@ define(function(require, exports, module) {
         r.setRequestHeader("Content-Type", "application/json");
         r.onreadystatechange = function () {
           if (r.readyState !== 4 || r.status !== 200) { return; }
-          callback();
+          that.getFeed(callback);
         };
         r.send(params);
       }
