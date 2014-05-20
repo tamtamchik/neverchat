@@ -133,7 +133,7 @@ define(function(require) {
       }
     }
 
-    function login(e) {
+    function login() {
       var id = document.getElementById('main-input-email');
       var ch = document.getElementById('main-input-channel');
       if (id.value !== '' && _validateEmail(id.value)) {
@@ -166,10 +166,14 @@ define(function(require) {
           '</div>'
       });
       loginSurface.on('keydown', function(e) {
-        if (e.which === 13 && e.srcElement.value !== '') login(e);
+        if (e.which === 13 && e.srcElement.value !== '') {
+          login();
+        }
       });
       loginSurface.on('click', function(e) {
-        if (e.target.className === 'button') login(e);
+        if (e.target.className === 'button') {
+          login();
+        }
       });
       mainContext.add(loginModifier).add(loginSurface);
     }
@@ -200,6 +204,7 @@ define(function(require) {
     }
 
     function addFooter() {
+      /*jshint validthis:true */
       var that = this;
       input = new Surface({
         content: '<div class="main-input-wrapper">' +
