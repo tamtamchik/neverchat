@@ -169,3 +169,10 @@ input:-moz-placeholder { color:rgba(255, 255, 255, 0.33); }
   line-height: 16px;
   font-weight: 400;
 }
+
+.new-message .message-text {
+  background: rgba(255, 255, 255, 0.9);
+}
+div.new-message > i {
+  color: rgba(255, 255, 255, 0.9);
+}

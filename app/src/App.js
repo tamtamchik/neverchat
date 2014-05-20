@@ -52,7 +52,7 @@ define(function(require) {
         channel += ch.value;
         dweets = new Dweet(channel);
         dweets.getFeed(loadMessages);
-        setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 4);
+        setInterval(function(){dweets.getFeed(loadMessages);}, 500 * 2);
         loginModifier.setTransform(
           Transform.translate(900000, 90000, 0),
           { duration : 0 }
@@ -107,8 +107,8 @@ define(function(require) {
       });
       loginSurface = new Surface({
         content: '<div class="email-container">' +
-          '<input id="main-input-email" placeholder="enter email" type="text">' +
           '<div class="email-title">neverchat.io</div>' +
+          '<input id="main-input-email" placeholder="enter email" type="text">' +
           '<input id="main-input-channel" placeholder="enter room (optional)" type="text">' +
           '<div id="main-input-save" class="button">Enter</div>' +
           '</div>',
@@ -208,10 +208,10 @@ define(function(require) {
             '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + timeago(new Date(msg.created).getTime()) + '</span></div>' ,
           size: [undefined, 66]
         });
-
         surface.pipe(scrollView);
         messages.push(surface);
-        scrollView.setPosition(20000);
+        scrollView.goToNextPage();
+        scrollView.goToNextPage();
       }
     }
 });

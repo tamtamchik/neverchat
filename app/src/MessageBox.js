@@ -21,7 +21,11 @@ define(function(require, exports, module) {
             currentSize[1] = correctHeight;
         }
         this.messageHeight = currentSize[1];
-        this.setSize(currentSize);
+        target.classList.add('new-message');
+
+        setTimeout(function(){
+            target.classList.remove('new-message');
+        },5000)
     };
     module.exports = MessageBox;
 });
