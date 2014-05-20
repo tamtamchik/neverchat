@@ -44,15 +44,7 @@ define(function(require) {
       return Math.round(Math.abs(offset / seconds));
     }
 
-    function _timeAgo(time, local) {
-      if (!local) {
-        local = Date.now();
-      }
-      if (typeof time !== 'number' || typeof local !== 'number') {
-        return;
-      }
-
-      var offset = Math.abs((local - time)/1000);
+    function _getTimeParams(offset) {
       var span   = [];
 
       if (offset <= 60) {
@@ -76,6 +68,20 @@ define(function(require) {
       else {
         span = [ '', 'a long time' ];
       }
+
+      return span;
+    }
+
+    function _timeAgo(time, local) {
+      if (!local) {
+        local = Date.now();
+      }
+      if (typeof time !== 'number' || typeof local !== 'number') {
+        return;
+      }
+
+      var offset = Math.abs((local - time)/1000);
+      var span   = _getTimeParams(offset);
 
       span[1] += (span[0] === 0 || span[0] > 1) ? 's' : '';
       span = span.join(' ');
