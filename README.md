@@ -1,4 +1,4 @@
-Foreverchat [![Code Climate](http://img.shields.io/codeclimate/github/tamtamchik/foreverchat.svg)](https://codeclimate.com/github/tamtamchik/foreverchat)
+Neverchat.io [![Code Climate](http://img.shields.io/codeclimate/github/tamtamchik/neverchat.svg)](https://codeclimate.com/github/tamtamchik/neverchat)
 =====
 
-Simple chat using Dweet.io and Famo.us.
+Anonymous chat application. Based on http://dweet.io
