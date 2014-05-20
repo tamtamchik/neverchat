@@ -50,29 +50,24 @@ define(function(require) {
 
       var offset = Math.abs((local - time)/1000);
       var span   = [];
-      var MINUTE = 60;
-      var HOUR   = 3600;
-      var DAY    = 86400;
-      var WEEK   = 604800;
-      var YEAR   = 31556926;
 
       if (offset <= MINUTE) {
         span = [ Math.round(offset), 'seconds' ];
       }
-      else if (offset < (MINUTE * 60)) {
-        span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
+      else if (offset < (60 * 60)) {
+        span = [ Math.round(Math.abs(offset / 60)), 'min' ];
       }
-      else if (offset < (HOUR * 24)) {
-        span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
+      else if (offset < (3600 * 24)) {
+        span = [ Math.round(Math.abs(offset / 3600)), 'hr' ];
       }
-      else if (offset < (DAY * 7)) {
-        span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
+      else if (offset < (86400 * 7)) {
+        span = [ Math.round(Math.abs(offset / 86400)), 'day' ];
       }
-      else if (offset < (WEEK * 52)) {
-        span = [ Math.round(Math.abs(offset / WEEK)), 'week' ];
+      else if (offset < (604800 * 52)) {
+        span = [ Math.round(Math.abs(offset / 604800)), 'week' ];
       }
-      else if (offset < (YEAR * 10)) {
-        span = [ Math.round(Math.abs(offset / YEAR)), 'year' ];
+      else if (offset < (31556926 * 10)) {
+        span = [ Math.round(Math.abs(offset / 31556926)), 'year' ];
       }
       else {
         span = [ '', 'a long time' ];
@@ -149,7 +144,9 @@ define(function(require) {
           { duration : 0 }
         );
       }
-      else id.className = 'error';
+      else {
+        id.className = 'error';
+      }
     }
 
     function enterEmail() {
