@@ -30,6 +30,7 @@ define(function(require) {
     var input;
     var loginSurface;
     var loginModifier;
+    var chatHeight = 0;
 
     createLayout();
     addHeader();
@@ -106,9 +107,9 @@ define(function(require) {
       });
       loginSurface = new Surface({
         content: '<div class="email-container">' +
-          '<div class="email-title">Welcome to Foreverchat!</div>' +
           '<input id="main-input-email" placeholder="enter email" type="text">' +
-          '<input id="main-input-channel" placeholder="enter channel (optional)" type="text">' +
+          '<div class="email-title">neverchat.io</div>' +
+          '<input id="main-input-channel" placeholder="enter room (optional)" type="text">' +
           '<div id="main-input-save" class="button">Enter</div>' +
           '</div>',
         classes: ['email-wrapper'],
@@ -137,7 +138,7 @@ define(function(require) {
 
     function addHeader() {
       layout.header.add(new Surface({
-        content: '<div class="title">Foreverchat</div>',
+        content: '<div class="title">neverchat.io</div>',
         classes: ['header'],
         properties: {
           lineHeight: '50px',
@@ -171,11 +172,7 @@ define(function(require) {
       var scrollModifier = new StateModifier({ size: [undefined, 60]});
       var scrollNode = new RenderNode(scrollModifier);
       scrollNode.add(scrollView);
-
       scrollView.sequenceFrom(messages);
-
-      // dweets.getFeed(loadMessages);
-      // setInterval(function(){dweets.getFeed(loadMessages)}, 500 * 4);
     }
 
     function loadMessages(res) {
@@ -203,7 +200,6 @@ define(function(require) {
 
     function renderMessage(msg) {
       if (msg) {
-        // msg.content.message = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, maxime, laborum delectus eum amet voluptatum tempora odit distinctio molestias numquam ipsum sunt harum vel modi aperiam mollitia facilis soluta ullam.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, quibusdam, atque, obcaecati, delectus neque aperiam rem placeat aspernatur optio inventore iusto enim totam facere molestiae modi impedit dolor itaque veniam.'
         var surface = new MessageBox({
           classes: ['message','message-wrapper'],
           content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
@@ -212,6 +208,7 @@ define(function(require) {
             '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + timeago(new Date(msg.created).getTime()) + '</span></div>' ,
           size: [undefined, 66]
         });
+
         surface.pipe(scrollView);
         messages.push(surface);
         scrollView.setPosition(20000);
