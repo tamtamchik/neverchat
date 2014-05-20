@@ -20,8 +20,12 @@
 }
 
 html {
-  background: url(../content/images/background.jpg) center center;
+  /*background: url(../content/images/background.jpg) center center;*/
   font-family: 'Open Sans', serif;
+}
+
+.famous-container {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .header, .footer {
@@ -156,13 +160,13 @@ input:-moz-placeholder { color:rgba(255, 255, 255, 0.33); }
 
 .email-wrapper {
   position: relative;
-  background: rgba(87, 154, 154, 0.7);
-  background: -moz-linear-gradient(top, rgba(87, 154, 154, 0.7) 0%, rgba(87, 154, 154, 0.7) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(87, 154, 154, 0.7)), color-stop(100%,rgba(87, 154, 154, 0.7))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(87, 154, 154, 0.7) 0%,rgba(87, 154, 154, 0.7) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(87, 154, 154, 0.7) 0%,rgba(87, 154, 154, 0.7) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, rgba(87, 154, 154, 0.7) 0%,rgba(87, 154, 154, 0.7) 100%); /* IE10+ */
-  background: linear-gradient(to bottom, rgba(87, 154, 154, 0.7) 0%,rgba(87, 154, 154, 0.7) 100%); /* W3C */
+  background: rgb(87, 154, 154);
+  background: -moz-linear-gradient(top, rgb(87, 154, 154) 0%, rgb(87, 154, 154) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(87, 154, 154)), color-stop(100%,rgb(87, 154, 154))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgb(87, 154, 154) 0%,rgb(87, 154, 154) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgb(87, 154, 154) 0%,rgb(87, 154, 154) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgb(87, 154, 154) 0%,rgb(87, 154, 154) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgb(87, 154, 154) 0%,rgb(87, 154, 154) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
   z-index: 10002;
 }

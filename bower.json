@@ -24,11 +24,13 @@
     "tests"
   ],
   "dependencies": {
-    "requirejs": "~2.1.11",
-    "almond": "~0.2.9",
+    "requirejs": "~>2.1.11",
+    "almond": "~>0.2.9",
     "famous-polyfills": "git+https://github.com/Famous/polyfills.git#0.1.1",
     "famous": "git+https://github.com/Famous/famous.git#0.1.2",
-    "showdown": "~0.3.1",
-    "js-base64": "~2.1.5"
+    "showdown": "~>0.3.1",
+    "js-base64": "~>2.1.5",
+    "trianglify": "~0.1.2",
+    "d3": "~3.4.8"
   }
 }

@@ -5,6 +5,10 @@ define(function(require) {
     // import other dependencies
     require('js-base64');
 
+    var t = new Trianglify();
+    var pattern = t.generate(document.body.clientWidth, document.body.clientHeight);
+    document.body.setAttribute('style', 'background-image: '+pattern.dataUrl);
+
     // import dependencies
     var Engine              = require('famous/core/Engine');
     var RenderNode          = require('famous/core/RenderNode');
@@ -12,7 +16,7 @@ define(function(require) {
     var Transform           = require('famous/core/Transform');
 
     var HeaderFooterLayout  = require('famous/views/HeaderFooterLayout');
-    var ScrollView          = require('famous/views/ScrollView');
+    var ScrollView          = require('famous/views/Scrollview');
 
     var StateModifier       = require('famous/modifiers/StateModifier');
 
@@ -229,7 +233,7 @@ define(function(require) {
     }
 
     function initialMessages() {
-      var scrollModifier = new StateModifier({ size: [undefined, 60]});
+      var scrollModifier = new StateModifier({ size: [undefined, 66]});
       var scrollNode = new RenderNode(scrollModifier);
       scrollNode.add(scrollView);
       scrollView.sequenceFrom(messages);

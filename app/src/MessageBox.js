@@ -16,7 +16,7 @@ define(function(require, exports, module) {
   MessageBox.prototype.deploy = function deploy(target) {
     this._superDeploy(target);
     // Fix for dynamic height
-    var correctHeight = target.getElementsByClassName('item')[0].offsetHeight  + 20;
+    var correctHeight = target.getElementsByClassName('item')[0].offsetHeight  + 30;
     var currentSize = this.getSize();
     if (currentSize[1] < correctHeight) {
       currentSize[1] = correctHeight;
