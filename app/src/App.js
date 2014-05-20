@@ -41,8 +41,12 @@ define(function(require) {
     }
 
     function _timeago(time, local) {
-      if (!local) local = Date.now();
-      if (typeof time !== 'number' || typeof local !== 'number') return;
+      if (!local) {
+        local = Date.now();
+      }
+      if (typeof time !== 'number' || typeof local !== 'number') {
+        return;
+      }
 
       var offset = Math.abs((local - time)/1000);
       var span   = [];
@@ -52,23 +56,32 @@ define(function(require) {
       var WEEK   = 604800;
       var YEAR   = 31556926;
 
-      var result = '';
-
-      if (offset <= MINUTE) span = [ Math.round(offset), 'seconds' ];
-      else if (offset < (MINUTE * 60)) span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
-      else if (offset < (HOUR * 24)) span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
-      else if (offset < (DAY * 7)) span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
-      else if (offset < (WEEK * 52)) span = [ Math.round(Math.abs(offset / WEEK)), 'week' ];
-      else if (offset < (YEAR * 10)) span = [ Math.round(Math.abs(offset / YEAR)), 'year' ];
-      else span = [ '', 'a long time' ];
+      if (offset <= MINUTE) {
+        span = [ Math.round(offset), 'seconds' ];
+      }
+      else if (offset < (MINUTE * 60)) {
+        span = [ Math.round(Math.abs(offset / MINUTE)), 'min' ];
+      }
+      else if (offset < (HOUR * 24)) {
+        span = [ Math.round(Math.abs(offset / HOUR)), 'hr' ];
+      }
+      else if (offset < (DAY * 7)) {
+        span = [ Math.round(Math.abs(offset / DAY)), 'day' ];
+      }
+      else if (offset < (WEEK * 52)) {
+        span = [ Math.round(Math.abs(offset / WEEK)), 'week' ];
+      }
+      else if (offset < (YEAR * 10)) {
+        span = [ Math.round(Math.abs(offset / YEAR)), 'year' ];
+      }
+      else {
+        span = [ '', 'a long time' ];
+      }
 
       span[1] += (span[0] === 0 || span[0] > 1) ? 's' : '';
       span = span.join(' ');
 
-      if (time <= local) result = span + ' ago';
-      else result = 'in ' + span;
-
-      return result;
+      return (time <= local) ? span + ' ago' : 'in ' + span;
     }
 
     function _renderMessage(msg) {
@@ -90,9 +103,10 @@ define(function(require) {
 
     function _updateDates() {
       var times = document.getElementsByClassName('timeago');
-      for (var i = times.length - 1; i >= 0; i--)
+      for (var i = times.length - 1; i >= 0; i--) {
         times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
-          _timeago(parseInt(times[i].attributes.date.value));
+          _timeago(parseInt(times[i].attributes.date.value, 0));
+      }
     }
 
     function loadMessages(res) {
@@ -109,11 +123,12 @@ define(function(require) {
             latestMessageDate = created;
           }
         }
-        for (i = 0; i < messagesRaw.length; i++)
+        for (i = 0; i < messagesRaw.length; i++) {
           if (messagesRaw[i].loaded === false) {
             _renderMessage(messagesRaw[i].item);
             messagesRaw[i].loaded = true;
           }
+        }
         _updateDates();
       }
     }
