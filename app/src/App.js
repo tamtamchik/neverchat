@@ -40,7 +40,11 @@ define(function(require) {
       return re.test(email);
     }
 
-    function _timeago(time, local) {
+    function _calcTime(offset, seconds) {
+      return Math.round(Math.abs(offset / seconds));
+    }
+
+    function _timeAgo(time, local) {
       if (!local) {
         local = Date.now();
       }
@@ -52,22 +56,22 @@ define(function(require) {
       var span   = [];
 
       if (offset <= 60) {
-        span = [ Math.round(offset), 'seconds' ];
+        span = [ _calcTime(offset, 1), 'seconds' ];
       }
       else if (offset < (60 * 60)) {
-        span = [ Math.round(Math.abs(offset / 60)), 'min' ];
+        span = [ _calcTime(offset, 60), 'min' ];
       }
       else if (offset < (3600 * 24)) {
-        span = [ Math.round(Math.abs(offset / 3600)), 'hr' ];
+        span = [ _calcTime(offset, 3600), 'hr' ];
       }
       else if (offset < (86400 * 7)) {
-        span = [ Math.round(Math.abs(offset / 86400)), 'day' ];
+        span = [ _calcTime(offset, 86400), 'day' ];
       }
       else if (offset < (604800 * 52)) {
-        span = [ Math.round(Math.abs(offset / 604800)), 'week' ];
+        span = [ _calcTime(offset, 604800), 'week' ];
       }
       else if (offset < (31556926 * 10)) {
-        span = [ Math.round(Math.abs(offset / 31556926)), 'year' ];
+        span = [ _calcTime(offset, 31556926), 'year' ];
       }
       else {
         span = [ '', 'a long time' ];
@@ -86,7 +90,7 @@ define(function(require) {
           content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
             '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
             '<span class="message-text">' + Base64.decode(msg.content.message) +
-            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + _timeago(new Date(msg.created).getTime()) + '</span></div>',
+            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '><i class="fa fa-clock-o"></i> ' + _timeAgo(new Date(msg.created).getTime()) + '</span></div>',
           size: [undefined, 66]
         });
         surface.pipe(scrollView);
@@ -100,7 +104,7 @@ define(function(require) {
       var times = document.getElementsByClassName('timeago');
       for (var i = times.length - 1; i >= 0; i--) {
         times[i].innerHTML = '<i class="fa fa-clock-o"></i> ' +
-          _timeago(parseInt(times[i].attributes.date.value, 0));
+          _timeAgo(parseInt(times[i].attributes.date.value, 0));
       }
     }
 
