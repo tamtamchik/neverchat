@@ -1,4 +1,4 @@
-/* globals define, JSONP, md5 */
+/* globals define, JSONP */
 define(function(require, exports, module) {
 
   function DweetAdapter(thingName) {
@@ -25,7 +25,9 @@ define(function(require, exports, module) {
         r.setRequestHeader('Connection', 'close');
         r.setRequestHeader('Content-Type', 'application/json');
         r.onreadystatechange = function() {
-          if (r.readyState !== 4 || r.status !== 200) return;
+          if (r.readyState !== 4 || r.status !== 200) {
+            return;
+          }
           that.getFeed(callback);
         };
         r.send(params);
