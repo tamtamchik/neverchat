@@ -21,6 +21,8 @@ define(function(require, exports, module) {
         _generateBackground.call(this);
         _createLayout.call(this);
         _createHeader.call(this);
+
+        _setListeners.call(this);
     }
 
     // Establishes prototype chain for ChatView class to inherit from View
@@ -29,14 +31,17 @@ define(function(require, exports, module) {
 
     // Default options for ChatView class
     ChatView.DEFAULT_OPTIONS = {
-        headerSize: 75,
+        headerSize: 64,
         footerSize: 41,
         titleWidth: 300,
+        titleOffset: 22,
+        animationDuration: 500, // TODO: play with duration
         titleOptions: {
             fontSize: '24px',
             textAlign: 'center',
             color: 'white',
-            letterSpacing: '1px'
+            letterSpacing: '1px',
+            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         }
     };
 
@@ -61,8 +66,8 @@ define(function(require, exports, module) {
         this.add(backModifier).add(this.backSurface);
 
         backModifier
-        .setOpacity(0, { duration: 500 })
-        .setOpacity(1, { duration: 500 }, _bounceTitle.bind(this));
+        .setOpacity(0, { duration: this.options.animationDuration / 3 })
+        .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
     }
 
     // Creates inital HeaderFooter layout
@@ -79,21 +84,22 @@ define(function(require, exports, module) {
         this.add(layoutModifier).add(this.layout);
     }
 
-    // Creates Chat Header zone
+    // Creates Chat Header & footer zone
     function _createHeader() {
-        var backgroundSurface = new Surface({
+        this.backgroundSurface = new Surface({
             properties: {
-                backgroundColor: 'rgba(150, 150, 150, 0.5)'
+                backgroundColor: 'rgba(220, 220, 220, 0.5)'
             }
         });
 
-        var titleSurface = new Surface({
+        this.titleSurface = new Surface({
             size: [this.options.titleWidth, this.options.headerSize],
             content: 'neverchat.io',
             properties: this.options.titleOptions
         });
 
-        var backgroundModifier = new StateModifier({
+        this.backgroundModifier = new StateModifier({
+            opacity: 0,
             transform: Transform.behind
         });
 
@@ -102,16 +108,22 @@ define(function(require, exports, module) {
             opacity: 0
         });
 
-        this.layout.header.add(backgroundModifier).add(backgroundSurface);
-        this.layout.header.add(this.titleModifier).add(titleSurface);
+        this.layout.header.add(this.backgroundModifier).add(this.backgroundSurface);
+        this.layout.header.add(this.titleModifier).add(this.titleSurface);
     }
 
-    function _bounceTitle() {
+    // Show main GUI with effects
+    function _showGUI() {
+        this.backgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.titleModifier.setTransform(
-            Transform.translate(0, 26, 0),
-            { duration : 2500, curve: Easing.outElastic }
+            Transform.translate(0, this.options.titleOffset, 0),
+            { duration : this.options.animationDuration, curve: Easing.outElastic }
         );
-        this.titleModifier.setOpacity(1, { duration: 2500 });
+        this.titleModifier.setOpacity(1, { duration: this.options.animationDuration });
+    }
+
+    function _setListeners() {
+        // TODO: put listeners here
     }
 
     module.exports = ChatView;
