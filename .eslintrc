@@ -25,6 +25,7 @@
         "space-infix-ops": 0,
         "strict": 0,
         "consistent-return": 0,
-        "curly": 0
+        "curly": 0,
+        "no-use-before-define": 0
     }
 }

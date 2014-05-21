@@ -71,6 +71,7 @@ define(function(require, exports, module) {
         this.add(layoutModifier).add(this.layout);
     }
 
+    // Creates Chat Header zone
     function _createHeader() {
         var backgroundSurface = new Surface({
             properties: {
