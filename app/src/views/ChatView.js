@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     ChatView.DEFAULT_OPTIONS = {
         headerSize: 75,
         footerSize: 41,
+        titleWidth: 300,
         titleOptions: {
             fontSize: '24px',
             textAlign: 'center',
@@ -80,7 +81,7 @@ define(function(require, exports, module) {
         });
 
         var titleSurface = new Surface({
-            size: [232, 75],
+            size: [this.options.titleWidth, this.options.headerSize],
             content : 'neverchat.io',
             properties: this.options.titleOptions
         });

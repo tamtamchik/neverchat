@@ -1,5 +1,5 @@
 /* globals define */
-define(function(require, exports, module) {
+define(function(require) {
     'use strict';
     // import dependencies
     var Engine = require('famous/core/Engine');
