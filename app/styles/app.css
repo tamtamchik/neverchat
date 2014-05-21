@@ -22,3 +22,19 @@
 html {
   font-family: 'Helvetica Neue', serif;
 }
+
+.title span {
+  color: rgb(213, 234, 56);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+/*FIXME: dirty hack, need to assin via properties*/
+*::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}

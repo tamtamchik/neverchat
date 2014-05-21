@@ -10,6 +10,8 @@ define(function(require, exports, module) {
     var Easing = require('famous/transitions/Easing');
 
     var ImageSurface    = require('famous/surfaces/ImageSurface');
+    var InputSurface    = require("famous/surfaces/InputSurface");
+
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
     // Constructor function for our ChatView class
@@ -21,6 +23,7 @@ define(function(require, exports, module) {
         _generateBackground.call(this);
         _createLayout.call(this);
         _createHeader.call(this);
+        _createFooter.call(this);
 
         _setListeners.call(this);
     }
@@ -31,18 +34,22 @@ define(function(require, exports, module) {
 
     // Default options for ChatView class
     ChatView.DEFAULT_OPTIONS = {
-        headerSize: 64,
-        footerSize: 41,
-        titleWidth: 300,
-        titleOffset: 22,
         animationDuration: 1200, // TODO: play with duration
+        backgroundProperties: {
+            backgroundColor: 'rgba(220, 220, 220, 0.5)'
+        },
+        footerSize: 42,
+        headerSize: 64,
+        titleOffset: 22,
         titleOptions: {
             fontSize: '24px',
             textAlign: 'center',
             color: 'white',
             letterSpacing: '1px',
             textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
-        }
+        },
+        titleWidth: 300,
+        sendButtonWidth: 80
     };
 
     // Define your helper functions and prototype methods here
@@ -84,42 +91,97 @@ define(function(require, exports, module) {
         this.add(layoutModifier).add(this.layout);
     }
 
-    // Creates Chat Header & footer zone
+    // Creates Chat Header & Footer zones
     function _createHeader() {
-        this.backgroundSurface = new Surface({
-            properties: {
-                backgroundColor: 'rgba(220, 220, 220, 0.5)'
-            }
+        // Header background
+        this.headerBackgroundSurface = new Surface({
+            properties: this.options.backgroundProperties
         });
 
-        this.titleSurface = new Surface({
-            size: [this.options.titleWidth, this.options.headerSize],
-            content: 'neverchat.io',
+        this.headerTitleSurface = new Surface({
+            classes: ['title'],
+            size: [this.options.titleWidth, this.options.headerSize - this.options.titleOffset],
+            content: 'neverchat<span>.io</span>',
             properties: this.options.titleOptions
         });
 
-        this.backgroundModifier = new StateModifier({
+        this.headerBackgroundModifier = new StateModifier({
             opacity: 0,
             transform: Transform.behind
         });
 
-        this.titleModifier = new StateModifier({
+        this.headerTitleModifier = new StateModifier({
             origin: [0.5, 0],
             opacity: 0
         });
 
-        this.layout.header.add(this.backgroundModifier).add(this.backgroundSurface);
-        this.layout.header.add(this.titleModifier).add(this.titleSurface);
+        this.layout.header.add(this.headerBackgroundModifier).add(this.headerBackgroundSurface);
+        this.layout.header.add(this.headerTitleModifier).add(this.headerTitleSurface);
+    }
+
+    function _createFooter() {
+        this.footerBackgroundSurface = new Surface({
+            properties: this.options.backgroundProperties
+        });
+
+        this.footerLayout = new HeaderFooter({
+            headerSize: 4,
+            footerSize: this.options.sendButtonWidth,
+            direction: 0
+        });
+
+        var layoutModifier = new StateModifier({
+            transform: Transform.translate(0, 0, 0.1)
+        });
+
+        this.chatInput = new InputSurface({
+            size: [undefined, 32],
+            origin: [0.5, 0.5],
+            name: 'inputSurface',
+            placeholder: 'Type message here',
+            value: '',
+            type: 'text',
+            properties: {
+                height: '26px',
+                padding: '1px 5px',
+                fontSize: '18px',
+                lineHeight: '26px',
+                border: '2px solid rgba(255, 255, 255, 0.9)',
+                background: 'transparent',
+                borderRadius: '5px',
+                fontSize: '16px',
+                color: 'rgba(255, 255, 255, 1)',
+                boxShadow: 'none'
+            }
+        });
+
+        this.footerBackgroundModifier = new StateModifier({
+            opacity: 0,
+            transform: Transform.behind
+        });
+
+        this.footerInputModifier = new StateModifier({
+            origin: [0.5, 0.5],
+            opacity: 0
+        });
+
+        this.layout.footer.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
+        this.layout.footer.add(layoutModifier).add(this.footerLayout);
+        this.footerLayout.content.add(this.footerInputModifier).add(this.chatInput);
     }
 
     // Show main GUI with effects
     function _showGUI() {
-        this.backgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        this.titleModifier.setTransform(
+        this.headerTitleModifier.setTransform(
             Transform.translate(0, this.options.titleOffset, 0),
             { duration : this.options.animationDuration, curve: Easing.outElastic }
         );
-        this.titleModifier.setOpacity(1, { duration: this.options.animationDuration });
+        this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
+
+        this.headerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.footerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+
+        this.footerInputModifier.setOpacity(1, { duration: this.options.animationDuration });
     }
 
     function _setListeners() {
