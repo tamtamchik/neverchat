@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var Transform       = require('famous/core/Transform');
     var StateModifier   = require('famous/modifiers/StateModifier');
 
+    var Easing = require('famous/transitions/Easing');
+
     var ImageSurface    = require('famous/surfaces/ImageSurface');
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
@@ -34,8 +36,7 @@ define(function(require, exports, module) {
             fontSize: '24px',
             textAlign: 'center',
             color: 'white',
-            letterSpacing: '1px',
-            paddingTop: '26px'
+            letterSpacing: '1px'
         }
     };
 
@@ -48,14 +49,20 @@ define(function(require, exports, module) {
 
         this.backSurface = new ImageSurface({
             size: [undefined, undefined],
-            content : pattern.dataUri,
-            properties : {
-                pointerEvents : 'none',
-                opacity: 0.1
-            }
+            content: pattern.dataUri
         });
 
-        this.add(this.backSurface);
+        var backModifier = new StateModifier({
+            origin: [0.5, 0.5],
+            align: [0.5, 0.5],
+            opacity: 0
+        });
+
+        this.add(backModifier).add(this.backSurface);
+
+        backModifier
+        .setOpacity(0, { duration: 500 })
+        .setOpacity(1, { duration: 500 }, _bounceTitle.bind(this));
     }
 
     // Creates inital HeaderFooter layout
@@ -82,21 +89,29 @@ define(function(require, exports, module) {
 
         var titleSurface = new Surface({
             size: [this.options.titleWidth, this.options.headerSize],
-            content : 'neverchat.io',
+            content: 'neverchat.io',
             properties: this.options.titleOptions
         });
 
         var backgroundModifier = new StateModifier({
-            transform : Transform.behind
+            transform: Transform.behind
         });
 
-        var titleModifier = new StateModifier({
-            origin: [0.5, 0.5],
-            align : [0.5, 0.5]
+        this.titleModifier = new StateModifier({
+            origin: [0.5, 0],
+            opacity: 0
         });
 
         this.layout.header.add(backgroundModifier).add(backgroundSurface);
-        this.layout.header.add(titleModifier).add(titleSurface);
+        this.layout.header.add(this.titleModifier).add(titleSurface);
+    }
+
+    function _bounceTitle() {
+        this.titleModifier.setTransform(
+            Transform.translate(0, 26, 0),
+            { duration : 2500, curve: Easing.outElastic }
+        );
+        this.titleModifier.setOpacity(1, { duration: 2500 });
     }
 
     module.exports = ChatView;
