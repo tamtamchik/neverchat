@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, Trianglify */
 define(function(require, exports, module) {
 
     // Import additional modules to be used in this view
