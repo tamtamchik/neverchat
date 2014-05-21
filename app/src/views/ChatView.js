@@ -144,7 +144,6 @@ define(function(require, exports, module) {
             properties: {
                 height: '26px',
                 padding: '1px 5px',
-                fontSize: '18px',
                 lineHeight: '26px',
                 border: '2px solid rgba(255, 255, 255, 0.9)',
                 background: 'transparent',
