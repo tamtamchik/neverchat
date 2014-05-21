@@ -18,6 +18,7 @@ define(function(require, exports, module) {
 
         _generateBackground.call(this);
         _createLayout.call(this);
+        _createHeader.call(this);
     }
 
     // Establishes prototype chain for ChatView class to inherit from View
@@ -27,7 +28,14 @@ define(function(require, exports, module) {
     // Default options for ChatView class
     ChatView.DEFAULT_OPTIONS = {
         headerSize: 75,
-        footerSize: 41
+        footerSize: 41,
+        titleOptions: {
+            fontSize: '24px',
+            textAlign: 'center',
+            color: 'white',
+            letterSpacing: '1px',
+            paddingTop: '26px'
+        }
     };
 
     // Define your helper functions and prototype methods here
@@ -52,7 +60,8 @@ define(function(require, exports, module) {
     // Creates inital HeaderFooter layout
     function _createLayout() {
         this.layout = new HeaderFooter({
-            headerSize: this.options.headerSize
+            headerSize: this.options.headerSize,
+            footerSize: this.options.footerSize
         });
 
         var layoutModifier = new StateModifier({
@@ -60,6 +69,32 @@ define(function(require, exports, module) {
         });
 
         this.add(layoutModifier).add(this.layout);
+    }
+
+    function _createHeader() {
+        var backgroundSurface = new Surface({
+            properties: {
+                backgroundColor: 'rgba(150, 150, 150, 0.5)'
+            }
+        });
+
+        var titleSurface = new Surface({
+            size: [232, 75],
+            content : 'neverchat.io',
+            properties: this.options.titleOptions
+        });
+
+        var backgroundModifier = new StateModifier({
+            transform : Transform.behind
+        });
+
+        var titleModifier = new StateModifier({
+            origin: [0.5, 0.5],
+            align : [0.5, 0.5]
+        });
+
+        this.layout.header.add(backgroundModifier).add(backgroundSurface);
+        this.layout.header.add(titleModifier).add(titleSurface);
     }
 
     module.exports = ChatView;

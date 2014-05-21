@@ -1,8 +1,24 @@
-html {
-  background: #fff;
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(../fonts/DXI1ORHCpsQm3Vp6mXoaTQcuEIXEaFWBWXA4NoGd_Oo.woff) format('woff');
 }
 
-.backfaceVisibility {
-  -webkit-backface-visibility: visible;
-  backface-visibility: visible;
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(../fonts/RjgO7rYTmqiVp7vzi-Q5UbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(../fonts/MTP_ySUJH_bn48VBG8sNSgcuEIXEaFWBWXA4NoGd_Oo.woff) format('woff');
+}
+
+html {
+  font-family: 'Open Sans', serif;
 }
