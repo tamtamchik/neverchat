@@ -1,6 +1,6 @@
 {
   "name": "neverchat",
-  "description": "Anonymous chat application. Based on http://dweet.io",
+  "description": "Anonymous chat application. Based on http://dweet.io.",
   "version": "0.1.0",
   "homepage": "https://github.com/tamtamchik/neverchat",
   "authors": [{
@@ -24,12 +24,10 @@
     "tests"
   ],
   "dependencies": {
-    "requirejs": "~>2.1.11",
-    "almond": "~>0.2.9",
+    "requirejs": "~2.1.11",
+    "almond": "~0.2.9",
     "famous-polyfills": "git+https://github.com/Famous/polyfills.git#0.1.1",
-    "famous": "git+https://github.com/Famous/famous.git#0.1.2",
-    "showdown": "~>0.3.1",
-    "js-base64": "~>2.1.5",
+    "famous": "git+https://github.com/Famous/famous.git#0.2.0",
     "trianglify": "~0.1.2",
     "d3": "~3.4.8"
   }
