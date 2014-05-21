@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var StateModifier   = require('famous/modifiers/StateModifier');
 
     var ImageSurface    = require('famous/surfaces/ImageSurface');
+    var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
     // Constructor function for our ChatView class
     function ChatView() {
@@ -16,6 +17,7 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         _generateBackground.call(this);
+        _createLayout.call(this);
     }
 
     // Establishes prototype chain for ChatView class to inherit from View
@@ -23,7 +25,10 @@ define(function(require, exports, module) {
     ChatView.prototype.constructor = ChatView;
 
     // Default options for ChatView class
-    ChatView.DEFAULT_OPTIONS = {};
+    ChatView.DEFAULT_OPTIONS = {
+        headerSize: 75,
+        footerSize: 41
+    };
 
     // Define your helper functions and prototype methods here
     // Use Trianglify to generate random background for application
@@ -42,6 +47,19 @@ define(function(require, exports, module) {
         });
 
         this.add(this.backSurface);
+    }
+
+    // Creates inital HeaderFooter layout
+    function _createLayout() {
+        this.layout = new HeaderFooter({
+            headerSize: this.options.headerSize
+        });
+
+        var layoutModifier = new StateModifier({
+            transform: Transform.translate(0, 0, 0.1)
+        });
+
+        this.add(layoutModifier).add(this.layout);
     }
 
     module.exports = ChatView;
