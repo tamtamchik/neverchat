@@ -35,7 +35,7 @@ define(function(require, exports, module) {
         footerSize: 41,
         titleWidth: 300,
         titleOffset: 22,
-        animationDuration: 500, // TODO: play with duration
+        animationDuration: 1200, // TODO: play with duration
         titleOptions: {
             fontSize: '24px',
             textAlign: 'center',
