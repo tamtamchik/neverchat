@@ -42,11 +42,10 @@ define(function(require, exports, module) {
         headerSize: 64,
         messageButtonOptions: {
             height: '26px',
-            padding: '1px 5px',
             lineHeight: '26px',
-            border: '2px solid rgba(255, 255, 255, 0.9)',
-            background: 'rgba(255, 255, 255, 0.5)',
-            borderRadius: '5px',
+            border: '2px solid transparent',
+            background: 'transparent',
+            textAlign: 'center',
             fontSize: '16px',
             color: 'rgba(255, 255, 255, 1)',
             boxShadow: 'none',
@@ -74,7 +73,7 @@ define(function(require, exports, module) {
             textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         },
         titleWidth: 300,
-        sendButtonWidth: 80
+        sendButtonWidth: 60
     };
 
     // Define your helper functions and prototype methods here
@@ -169,12 +168,10 @@ define(function(require, exports, module) {
             properties: this.options.messageInputOptions
         });
 
-        this.messageButton = new InputSurface({
+        this.messageButton = new Surface({
             size: [this.options.sendButtonWidth-8, 32],
             origin: [0.5, 0.5],
-            name: 'messageButton',
-            value: 'Send',
-            type: 'button',
+            content: 'Send',
             properties: this.options.messageButtonOptions
         });
 
