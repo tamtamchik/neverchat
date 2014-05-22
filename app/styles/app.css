@@ -37,6 +37,7 @@ button:focus {
 /*FIXME: dirty hack, need to assin via properties*/
 *::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
+  text-shadow: none;
 }
 
 .no-selection {

@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     var Easing = require('famous/transitions/Easing');
 
     var ImageSurface    = require('famous/surfaces/ImageSurface');
-    var InputSurface    = require("famous/surfaces/InputSurface");
+    var InputSurface    = require('famous/surfaces/InputSurface');
 
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
@@ -40,7 +40,20 @@ define(function(require, exports, module) {
         },
         footerSize: 42,
         headerSize: 64,
-        inputOptions: {
+        messageButtonOptions: {
+            height: '26px',
+            padding: '1px 5px',
+            lineHeight: '26px',
+            border: '2px solid rgba(255, 255, 255, 0.9)',
+            background: 'rgba(255, 255, 255, 0.5)',
+            borderRadius: '5px',
+            fontSize: '16px',
+            color: 'rgba(255, 255, 255, 1)',
+            boxShadow: 'none',
+            fontWeight: '600',
+            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
+        },
+        messageInputOptions: {
             height: '26px',
             padding: '1px 5px',
             lineHeight: '26px',
@@ -49,7 +62,8 @@ define(function(require, exports, module) {
             borderRadius: '5px',
             fontSize: '16px',
             color: 'rgba(255, 255, 255, 1)',
-            boxShadow: 'none'
+            boxShadow: 'none',
+            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         },
         titleOffset: 22,
         titleOptions: {
@@ -145,14 +159,23 @@ define(function(require, exports, module) {
             transform: Transform.translate(0, 0, 0.1)
         });
 
-        this.chatInput = new InputSurface({
+        this.messageInput = new InputSurface({
             size: [undefined, 32],
             origin: [0.5, 0.5],
-            name: 'inputSurface',
+            name: 'messageInput',
             placeholder: 'Type message here',
             value: '',
             type: 'text',
-            properties: this.options.inputOptions
+            properties: this.options.messageInputOptions
+        });
+
+        this.messageButton = new InputSurface({
+            size: [this.options.sendButtonWidth-8, 32],
+            origin: [0.5, 0.5],
+            name: 'messageButton',
+            value: 'Send',
+            type: 'button',
+            properties: this.options.messageButtonOptions
         });
 
         this.footerBackgroundModifier = new StateModifier({
@@ -160,14 +183,20 @@ define(function(require, exports, module) {
             transform: Transform.behind
         });
 
-        this.footerInputModifier = new StateModifier({
+        this.messageInputModifier = new StateModifier({
+            origin: [0.5, 0.5],
+            opacity: 0
+        });
+
+        this.messageButtonModifier = new StateModifier({
             origin: [0.5, 0.5],
             opacity: 0
         });
 
         this.layout.footer.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
         this.layout.footer.add(layoutModifier).add(this.footerLayout);
-        this.footerLayout.content.add(this.footerInputModifier).add(this.chatInput);
+        this.footerLayout.content.add(this.messageInputModifier).add(this.messageInput);
+        this.footerLayout.footer.add(this.messageButtonModifier).add(this.messageButton);
     }
 
     // Show main GUI with effects
@@ -182,7 +211,8 @@ define(function(require, exports, module) {
         this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
         this.headerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.footerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        this.footerInputModifier.setOpacity(1, { duration: this.options.animationDuration });
+        this.messageInputModifier.setOpacity(1, { duration: this.options.animationDuration });
+        this.messageButtonModifier.setOpacity(1, { duration: this.options.animationDuration });
     }
 
     function _setListeners() {
