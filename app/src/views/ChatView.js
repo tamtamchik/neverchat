@@ -110,7 +110,7 @@ define(function(require, exports, module) {
         });
 
         this.headerTitleSurface = new Surface({
-            classes: ['title'],
+            classes: ['title','no-selection'],
             size: [this.options.titleWidth, this.options.headerSize - this.options.titleOffset],
             content: 'neverchat<span>.io</span>',
             properties: this.options.titleOptions
