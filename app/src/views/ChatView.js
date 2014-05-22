@@ -40,6 +40,17 @@ define(function(require, exports, module) {
         },
         footerSize: 42,
         headerSize: 64,
+        inputOptions: {
+            height: '26px',
+            padding: '1px 5px',
+            lineHeight: '26px',
+            border: '2px solid rgba(255, 255, 255, 0.9)',
+            background: 'transparent',
+            borderRadius: '5px',
+            fontSize: '16px',
+            color: 'rgba(255, 255, 255, 1)',
+            boxShadow: 'none'
+        },
         titleOffset: 22,
         titleOptions: {
             fontSize: '24px',
@@ -141,17 +152,7 @@ define(function(require, exports, module) {
             placeholder: 'Type message here',
             value: '',
             type: 'text',
-            properties: {
-                height: '26px',
-                padding: '1px 5px',
-                lineHeight: '26px',
-                border: '2px solid rgba(255, 255, 255, 0.9)',
-                background: 'transparent',
-                borderRadius: '5px',
-                fontSize: '16px',
-                color: 'rgba(255, 255, 255, 1)',
-                boxShadow: 'none'
-            }
+            properties: this.options.inputOptions
         });
 
         this.footerBackgroundModifier = new StateModifier({
@@ -171,15 +172,16 @@ define(function(require, exports, module) {
 
     // Show main GUI with effects
     function _showGUI() {
+
+        // bounce title and make it wisible
         this.headerTitleModifier.setTransform(
             Transform.translate(0, this.options.titleOffset, 0),
-            { duration : this.options.animationDuration * 2, curve: Easing.outElastic }
-        );
-        this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
+            { duration : this.options.animationDuration * 2, curve: Easing.outElastic });
 
+        // Make visible other surfaces
+        this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
         this.headerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.footerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-
         this.footerInputModifier.setOpacity(1, { duration: this.options.animationDuration });
     }
 
