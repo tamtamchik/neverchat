@@ -173,7 +173,7 @@ define(function(require, exports, module) {
     function _showGUI() {
         this.headerTitleModifier.setTransform(
             Transform.translate(0, this.options.titleOffset, 0),
-            { duration : this.options.animationDuration, curve: Easing.outElastic }
+            { duration : this.options.animationDuration * 2, curve: Easing.outElastic }
         );
         this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
 
