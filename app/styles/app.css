@@ -32,6 +32,12 @@ select:focus,
 textarea:focus,
 button:focus {
   outline: none;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+
+textarea, input[type="text"], input[type="submit"] {
+  -webkit-appearance: none;
 }
 
 /*FIXME: dirty hack, need to assin via properties*/
