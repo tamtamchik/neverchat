@@ -159,6 +159,7 @@ define(function(require, exports, module) {
         });
 
         this.messageInput = new InputSurface({
+            classes: ['no-selection'],
             size: [undefined, 32],
             origin: [0.5, 0.5],
             name: 'messageInput',
@@ -169,6 +170,7 @@ define(function(require, exports, module) {
         });
 
         this.messageButton = new Surface({
+            classes: ['no-selection'],
             size: [this.options.sendButtonWidth-8, 32],
             origin: [0.5, 0.5],
             content: 'Send',
