@@ -6,7 +6,7 @@ require.config({
         }
     },
     paths: {
-        famous: '../lib/famous/dist/famous',
+        famous: '../lib/famous',
         requirejs: '../lib/requirejs/require',
         almond: '../lib/almond/almond',
         'famous-polyfills': '../lib/famous-polyfills/index',
