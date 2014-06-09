@@ -5,14 +5,17 @@ define(function(require, exports, module) {
     var View            = require('famous/core/View');
     var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
+
     var StateModifier   = require('famous/modifiers/StateModifier');
 
-    var Easing = require('famous/transitions/Easing');
+    var Easing          = require('famous/transitions/Easing');
 
     var ImageSurface    = require('famous/surfaces/ImageSurface');
     var InputSurface    = require('famous/surfaces/InputSurface');
 
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
+
+    var ScrollView      = require('views/CustomScrollView')
 
     // Constructor function for our ChatView class
     function ChatView() {
@@ -24,6 +27,8 @@ define(function(require, exports, module) {
         _createLayout.call(this);
         _createHeader.call(this);
         _createFooter.call(this);
+        _createFooterInputs.call(this);
+        _createContent.call(this);
 
         _setListeners.call(this);
     }
@@ -158,6 +163,16 @@ define(function(require, exports, module) {
             transform: Transform.translate(0, 0, 0.1)
         });
 
+        this.footerBackgroundModifier = new StateModifier({
+            opacity: 0,
+            transform: Transform.behind
+        });
+
+        this.layout.footer.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
+        this.layout.footer.add(layoutModifier).add(this.footerLayout);
+    }
+
+    function _createFooterInputs() {
         this.messageInput = new InputSurface({
             classes: ['no-selection'],
             size: [undefined, 32],
@@ -177,11 +192,6 @@ define(function(require, exports, module) {
             properties: this.options.messageButtonOptions
         });
 
-        this.footerBackgroundModifier = new StateModifier({
-            opacity: 0,
-            transform: Transform.behind
-        });
-
         this.messageInputModifier = new StateModifier({
             origin: [0.5, 0.5],
             opacity: 0
@@ -192,8 +202,6 @@ define(function(require, exports, module) {
             opacity: 0
         });
 
-        this.layout.footer.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
-        this.layout.footer.add(layoutModifier).add(this.footerLayout);
         this.footerLayout.content.add(this.messageInputModifier).add(this.messageInput);
         this.footerLayout.footer.add(this.messageButtonModifier).add(this.messageButton);
     }
@@ -216,6 +224,12 @@ define(function(require, exports, module) {
 
     function _setListeners() {
         // TODO: put listeners here
+    }
+
+    // Create base ScrollView
+    function _createContent() {
+        this.scrollView = new ScrollView();
+        this.layout.content.add(this.scrollView);
     }
 
     module.exports = ChatView;
