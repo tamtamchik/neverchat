@@ -1,10 +1,15 @@
-/* globals define, Trianglify */
+/* globals define, Trianglify, Base64, md5 */
 define(function(require, exports, module) {
+    'use strict';
+
+    // import other dependencies
+    require('js-base64');
 
     // Import additional modules to be used in this view
     var View            = require('famous/core/View');
     var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
+    var RenderNode      = require('famous/core/RenderNode');
 
     var StateModifier   = require('famous/modifiers/StateModifier');
 
@@ -19,6 +24,11 @@ define(function(require, exports, module) {
 
     // Constructor function for our ChatView class
     function ChatView() {
+
+        this.messages = [];
+        this.messagesRaw = [];
+        this.latestMessageDate = new Date(-1);
+
 
         // Applies View's constructor function to ChatView class
         View.apply(this, arguments);
@@ -103,6 +113,7 @@ define(function(require, exports, module) {
 
         backModifier
         .setOpacity(0, { duration: this.options.animationDuration / 3 })
+        // TODO: make showGUI after login
         .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
     }
 
@@ -230,7 +241,56 @@ define(function(require, exports, module) {
     function _createContent() {
         this.scrollView = new ScrollView();
         this.layout.content.add(this.scrollView);
+
+        this.scrollModifier = new StateModifier({
+            size: [undefined, 66]}
+        );
+
+        this.scrollNode = new RenderNode(this.scrollModifier);
+        this.scrollNode.add(this.scrollView);
+        this.scrollView.sequenceFrom(this.messages);
     }
+
+    ChatView.prototype.loadMessages = function(res) {
+        var i;
+        if (res && res.this !== 'failed') {
+            for (i = res.with.length - 1; i >= 0; i--) {
+                var created = new Date(res.with[i].created);
+                if (this.latestMessageDate < created) {
+                    var it = {
+                        loaded: false,
+                        item: res.with[i]
+                    };
+                    this.messagesRaw.push(it);
+                    this.latestMessageDate = created;
+                }
+            }
+            for (i = 0; i < this.messagesRaw.length; i++) {
+              if (this.messagesRaw[i].loaded === false) {
+                this.renderMessage(this.messagesRaw[i].item);
+                this.messagesRaw[i].loaded = true;
+              }
+            }
+        }
+    };
+
+    ChatView.prototype.renderMessage = function(msg) {
+      if (msg) {
+        var surface = new MessageBox({
+          classes: ['message','message-wrapper'],
+          content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
+            '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
+            '<span class="message-text">' + Base64.decode(msg.content.message) +
+            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '>' +
+            '<i class="fa fa-clock-o"></i> ' + _timeAgo(new Date(msg.created).getTime()) + '</span></div>',
+          size: [undefined, 66]
+        });
+        surface.pipe(this.scrollView);
+        this.messages.push(surface);
+        this.scrollView.goToNextPage();
+        this.scrollView.goToNextPage();
+      }
+    };
 
     module.exports = ChatView;
 });
