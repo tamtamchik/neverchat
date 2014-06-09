@@ -1,7 +1,7 @@
 {
   "name": "neverchat",
   "description": "Anonymous chat application. Based on http://dweet.io.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "homepage": "https://github.com/tamtamchik/neverchat",
   "authors": [
     {
