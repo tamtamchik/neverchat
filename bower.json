@@ -26,11 +26,11 @@
     "tests"
   ],
   "dependencies": {
-    "requirejs": "~2.1.11",
-    "almond": "~0.2.9",
-    "famous-polyfills": "git+https://github.com/Famous/polyfills.git#0.1.1",
-    "famous": "git+https://github.com/Famous/famous.git#0.2.0",
-    "trianglify": "~0.1.2",
-    "d3": "~3.4.8"
+    "requirejs": "~>2.1.11",
+    "almond": "~>0.2.9",
+    "famous-polyfills": "git+https://github.com/Famous/polyfills.git",
+    "famous": "git+https://github.com/Famous/famous.git",
+    "trianglify": "~>0.1.2",
+    "d3": "~>3.4.8"
   }
 }

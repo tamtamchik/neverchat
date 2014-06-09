@@ -29,6 +29,6 @@
     "commit": "2786bc28af5022b5c852a9d4100aa30961198738"
   },
   "_source": "https://github.com/Famous/polyfills.git",
-  "_target": "0.1.1",
+  "_target": "*",
   "_originalSource": "git+https://github.com/Famous/polyfills.git"
 }
