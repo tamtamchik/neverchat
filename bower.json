@@ -1,12 +1,14 @@
 {
   "name": "neverchat",
   "description": "Anonymous chat application. Based on http://dweet.io.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/tamtamchik/neverchat",
-  "authors": [{
-    "name": "Yuri Tkachenko",
-    "url": "http://github.com/tamtamchik/"
-  }],
+  "authors": [
+    {
+      "name": "Yuri Tkachenko",
+      "url": "http://github.com/tamtamchik/"
+    }
+  ],
   "main": "app/index.html",
   "moduleType": [
     "amd"
