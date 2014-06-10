@@ -20,7 +20,8 @@ define(function(require, exports, module) {
 
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
-    var ScrollView      = require('views/CustomScrollView')
+    var ChatHeaderView  = require('views/ChatHeaderView');
+    var ScrollView      = require('views/CustomScrollView');
 
     // Constructor function for our ChatView class
     function ChatView() {
@@ -79,15 +80,6 @@ define(function(require, exports, module) {
             boxShadow: 'none',
             textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         },
-        titleOffset: 22,
-        titleOptions: {
-            fontSize: '24px',
-            textAlign: 'center',
-            color: 'white',
-            letterSpacing: '1px',
-            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
-        },
-        titleWidth: 300,
         sendButtonWidth: 60
     };
 
@@ -133,30 +125,13 @@ define(function(require, exports, module) {
 
     // Creates Chat Header & Footer zones
     function _createHeader() {
-        // Header background
-        this.headerBackgroundSurface = new Surface({
-            properties: this.options.backgroundProperties
-        });
+        this.chatHeaderView = new ChatHeaderView();
 
-        this.headerTitleSurface = new Surface({
-            classes: ['title','no-selection'],
-            size: [this.options.titleWidth, this.options.headerSize - this.options.titleOffset],
-            content: 'neverchat<span>.io</span>',
-            properties: this.options.titleOptions
-        });
-
-        this.headerBackgroundModifier = new StateModifier({
-            opacity: 0,
-            transform: Transform.behind
-        });
-
-        this.headerTitleModifier = new StateModifier({
-            origin: [0.5, 0],
+        this.chatHeaderModifier = new StateModifier({
             opacity: 0
         });
 
-        this.layout.header.add(this.headerBackgroundModifier).add(this.headerBackgroundSurface);
-        this.layout.header.add(this.headerTitleModifier).add(this.headerTitleSurface);
+        this.layout.header.add(this.chatHeaderModifier).add(this.chatHeaderView);
     }
 
     function _createFooter() {
@@ -219,18 +194,14 @@ define(function(require, exports, module) {
 
     // Show main GUI with effects
     function _showGUI() {
-
-        // bounce title and make it wisible
-        this.headerTitleModifier.setTransform(
-            Transform.translate(0, this.options.titleOffset, 0),
-            { duration : this.options.animationDuration * 2, curve: Easing.outElastic });
-
         // Make visible other surfaces
-        this.headerTitleModifier.setOpacity(1, { duration: this.options.animationDuration });
-        this.headerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration });
         this.footerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.messageInputModifier.setOpacity(1, { duration: this.options.animationDuration });
         this.messageButtonModifier.setOpacity(1, { duration: this.options.animationDuration });
+
+        // bounce title and make it wisible
+        this.chatHeaderView.bounceTitle();
     }
 
     function _setListeners() {
