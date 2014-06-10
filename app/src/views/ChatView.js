@@ -1,6 +1,5 @@
 /* globals define, Trianglify, Base64, md5 */
 define(function(require, exports, module) {
-    'use strict';
 
     // import other dependencies
     require('js-base64');
