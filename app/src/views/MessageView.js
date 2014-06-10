@@ -1,26 +1,50 @@
 /* globals define */
 define(function(require, exports, module) {
 
-    // Import additional modules to be used in this view
-    var View               = require('famous/core/View');
+    // =================================================================================================================
+    var View               = require('famous/core/View');                                       // Require extra modules
     // var Surface         = require('famous/core/Surface');
-    // var Transform       = require('famous/core/Transform');
-    // var StateModifier   = require('famous/modifiers/StateModifier');
+    var Transform          = require('famous/core/Transform');
+    var StateModifier      = require('famous/modifiers/StateModifier');
+    var ImageSurface       = require('famous/surfaces/ImageSurface');
 
-    // Constructor function for our MessageView class
-    function MessageView() {
+    // =================================================================================================================
+    function MessageView(msg) {                                               // Constructor function for MessageView class
+        this.message = msg.data;
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
+
+        _createAvatar.apply(this);
     }
 
     // Establishes prototype chain for MessageView class to inherit from View
     MessageView.prototype = Object.create(View.prototype);
     MessageView.prototype.constructor = MessageView;
 
-    // Default options for MessageView class
-    MessageView.DEFAULT_OPTIONS = {};
+    // =================================================================================================================
+    MessageView.DEFAULT_OPTIONS = {                                             // Default options for MessageView class
+        avatarHeight: 50,
+        avatarWidth: 50,
+        avatarUrl: {
+            prefix: 'http://www.gravatar.com/avatar/',
+            postfix: '?s=200&d=identicon'
+        },
+    };
 
-    // Define your helper functions and prototype methods here
+    // =================================================================================================================
+                                                                                                       // Layout section
 
-    module.exports = MessageView;
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createAvatar() {                                                                      // Avatar generation
+        var avatar = new ImageSurface({
+            size: [this.options.avatarHeight, this.options.avatarWidth],
+            content: this.options.avatarUrl.prefix + this.message.content.user + this.options.avatarUrl.postfix
+        })
+
+        avatar.pipe(this);
+        this.add(avatar);
+    }
+
+    // =================================================================================================================
+    module.exports = MessageView;                                                                       // Module export
 });
