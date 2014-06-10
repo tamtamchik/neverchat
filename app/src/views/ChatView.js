@@ -2,9 +2,7 @@
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    require('js-base64');                                                                       // Require extra modules
-
-    // Import additional modules to be used in this view
+    var base64          = require('js-base64');                                                 // Require extra modules
     var View            = require('famous/core/View');
     // var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
@@ -13,14 +11,15 @@ define(function(require, exports, module) {
     var ImageSurface    = require('famous/surfaces/ImageSurface');
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
+    // Custom modules
     var ChatHeaderView  = require('views/ChatHeaderView');
     var ChatFooterView  = require('views/ChatFooterView');
     var ScrollView      = require('views/ChatScrollView');
     var MessageView     = require('views/MessageView');
 
     // =================================================================================================================
-    function ChatView() {                                                 // Constructor function for our ChatView class
-
+    function ChatView() {                                                     // Constructor function for ChatView class
+        // Defining vars
         this.messages = [];
         this.messagesRaw = [];
         this.latestMessageDate = new Date(-1);
@@ -28,6 +27,7 @@ define(function(require, exports, module) {
         // Applies View's constructor function to ChatView class
         View.apply(this, arguments);
 
+        // Calling functions
         _generateBackground.call(this);
         _createLayout.call(this);
         _createHeader.call(this);
@@ -47,8 +47,6 @@ define(function(require, exports, module) {
         footerSize: 42,
         headerSize: 64
     };
-
-    // Define your helper functions and prototype methods here
 
     // =================================================================================================================
                                                                                                        // Layout section
@@ -115,7 +113,7 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createContent() {                                                                // Create base ScrollView
+    function _createContent() {                                                               // Creates base ScrollView
         this.scrollView = new ScrollView();
         this.layout.content.add(this.scrollView);
 
@@ -151,7 +149,7 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.loadMessages = function(res) {                                                   // Load messages
+    ChatView.prototype.loadMessages = function(res) {                     // Load messages via dweet adapter as callback
         var i;
         if (res && res.this !== 'failed') {
             for (i = res.with.length - 1; i >= 0; i--) {
@@ -175,7 +173,7 @@ define(function(require, exports, module) {
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.renderMessage = function(msg) {                                                 // Render message
+    ChatView.prototype.renderMessage = function(msg) {                                          // Render single message
       if (msg) {
         var surface = new MessageView({
             data: msg

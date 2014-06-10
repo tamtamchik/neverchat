@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    function DweetAdapter(thingName) {                                // Constructor function for our DweetAdapter class
+    function DweetAdapter(thingName) {                                    // Constructor function for DweetAdapter class
         this._thing = thingName;
         this._feedUrl = 'https://dweet.io:443/get/dweets/for/' + _thing + '?callback';
         this._postUrl = 'https://dweet.io:443/dweet/for/' + _thing;
@@ -13,12 +13,12 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    DweetAdapter.prototype.getFeed = function(callback) {                              // getFeed - load feed from dweet
+    DweetAdapter.prototype.getFeed = function(callback) {                   // Load all messages feed from dweet channel
         JSONP(_feedUrl, callback);
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    DweetAdapter.prototype.sendMessage = function(message, user, callback) {      // sendMessage - send message to dweet
+    DweetAdapter.prototype.sendMessage = function(message, user, callback) {            // Send message to dweet channel
         var that = this;
         var params = {
             'message': message,

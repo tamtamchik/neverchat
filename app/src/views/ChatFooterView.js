@@ -1,23 +1,20 @@
 /* globals define */
 define(function(require, exports, module) {
 
-    // Import additional modules to be used in this view
-    var View            = require('famous/core/View');
+    // =================================================================================================================
+    var View            = require('famous/core/View');                                          // Require extra modules
     var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
-
     var StateModifier   = require('famous/modifiers/StateModifier');
-
     var InputSurface    = require('famous/surfaces/InputSurface');
-
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
-    // Constructor function for our ChatFooterView class
-    function ChatFooterView() {
-
+    // =================================================================================================================
+    function ChatFooterView() {                                         // Constructor function for ChatFooterView class
         // Applies View's constructor function to ChatFooterView class
         View.apply(this, arguments);
 
+        // Calling functions
         _createFooter.call(this);
         _createInputs.call(this);
     }
@@ -26,8 +23,8 @@ define(function(require, exports, module) {
     ChatFooterView.prototype = Object.create(View.prototype);
     ChatFooterView.prototype.constructor = ChatFooterView;
 
-    // Default options for ChatFooterView class
-    ChatFooterView.DEFAULT_OPTIONS = {
+    // =================================================================================================================
+    ChatFooterView.DEFAULT_OPTIONS = {                                       // Default options for ChatFooterView class
         animationDuration: 1200, // TODO: play with duration
         backgroundProperties: {
             backgroundColor: 'rgba(220, 220, 220, 0.5)'
@@ -59,13 +56,17 @@ define(function(require, exports, module) {
         sendButtonWidth: 60
     };
 
-    // Define your helper functions and prototype methods here
+    // =================================================================================================================
+                                                                                                       // Layout section
 
-    function _createFooter() {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createFooter() {                                                            // Main footer create function
+        // Background
         this.footerBackgroundSurface = new Surface({
             properties: this.options.backgroundProperties
         });
 
+        // 2 columns layout
         this.footerLayout = new HeaderFooter({
             headerSize: 4,
             footerSize: this.options.sendButtonWidth,
@@ -80,11 +81,14 @@ define(function(require, exports, module) {
             transform: Transform.behind
         });
 
+        // Adding elements to the view
         this.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
         this.add(layoutModifier).add(this.footerLayout);
     }
 
-    function _createInputs() {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createInputs() {                                                          // Creates input items in footer
+        // Text input
         this.messageInput = new InputSurface({
             size: [undefined, 32],
             origin: [0.5, 0.5],
@@ -95,6 +99,7 @@ define(function(require, exports, module) {
             properties: this.options.messageInputOptions
         });
 
+        // Send button
         this.messageButton = new Surface({
             classes: ['no-selection'],
             size: [this.options.sendButtonWidth-8, 32],
@@ -111,9 +116,11 @@ define(function(require, exports, module) {
             origin: [0.5, 0.5]
         });
 
+        // Adding elements to the view
         this.footerLayout.content.add(this.messageInputModifier).add(this.messageInput);
         this.footerLayout.footer.add(this.messageButtonModifier).add(this.messageButton);
     }
 
-    module.exports = ChatFooterView;
+    // =================================================================================================================
+    module.exports = ChatFooterView;                                                                    // Module export
 });
