@@ -1,7 +1,7 @@
 var JSONP = function(global){
     // (C) WebReflection Essential - Mit Style
   // 216 bytes minified + gzipped via Google Closure Compiler
-    function JSONP(uri, callback) {
+    function JSONP(uri, callback, scope) {
         function JSONPResponse() {
             try { delete global[src] } catch(e) {
                 // kinda forgot < IE9 existed
@@ -9,7 +9,7 @@ var JSONP = function(global){
                 global[src] = null
             }
             documentElement.removeChild(script);
-            callback.apply(this, arguments);
+            callback.apply(scope||this, arguments);
         }
         var
             src = prefix + id++,

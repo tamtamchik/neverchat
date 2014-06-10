@@ -17,6 +17,8 @@ define(function(require, exports, module) {
     var ScrollView      = require('views/ChatScrollView');
     var MessageView     = require('views/MessageView');
 
+    var Dweet           = require('DweetAdapter');
+
     // =================================================================================================================
     function ChatView() {                                                     // Constructor function for ChatView class
         // Defining vars
@@ -35,6 +37,8 @@ define(function(require, exports, module) {
         _createContent.call(this);
 
         _setListeners.call(this);
+
+        _start.call(this);
     }
 
     // Establishes prototype chain for ChatView class to inherit from View
@@ -183,6 +187,14 @@ define(function(require, exports, module) {
         this.messages.push(surface);
       }
     };
+
+    // FIXME: temp function to start the program
+    function _start() {
+        var channel = 'neverchat_';
+        channel += md5('');
+        dweets = new Dweet(channel);
+        dweets.getFeed(this.loadMessages, this);
+    }
 
     // =================================================================================================================
     module.exports = ChatView;                                                                          // Module export

@@ -3,9 +3,9 @@ define(function(require, exports, module) {
 
     // =================================================================================================================
     function DweetAdapter(thingName) {                                    // Constructor function for DweetAdapter class
-        this._thing = thingName;
-        this._feedUrl = 'https://dweet.io:443/get/dweets/for/' + _thing + '?callback';
-        this._postUrl = 'https://dweet.io:443/dweet/for/' + _thing;
+        this.thing = thingName;
+        this.feedUrl = 'https://dweet.io:443/get/dweets/for/' + this.thing + '?callback';
+        this.postUrl = 'https://dweet.io:443/dweet/for/' + this.thing;
     }
     DweetAdapter.prototype.constructor = DweetAdapter;
 
@@ -13,8 +13,8 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    DweetAdapter.prototype.getFeed = function(callback) {                   // Load all messages feed from dweet channel
-        JSONP(_feedUrl, callback);
+    DweetAdapter.prototype.getFeed = function(callback, scope) {                   // Load all messages feed from dweet channel
+        JSONP(this.feedUrl, callback, scope);
     };
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ define(function(require, exports, module) {
         params = JSON.stringify(params);
 
         var r = new XMLHttpRequest();
-        r.open('POST', _postUrl, true);
+        r.open('POST', this.postUrl, true);
         r.setRequestHeader('Content-length', params.length);
         r.setRequestHeader('Connection', 'close');
         r.setRequestHeader('Content-Type', 'application/json');
