@@ -60,7 +60,7 @@ define(function(require, exports, module) {
         });
 
         this.headerTitleModifier = new StateModifier({
-            origin: [0.5, 0],
+            origin: [0.5, 0]
         });
 
         this.add(this.headerBackgroundModifier).add(this.headerBackgroundSurface);

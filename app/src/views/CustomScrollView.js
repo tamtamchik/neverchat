@@ -9,7 +9,6 @@ define(function(require, exports, module) {
 
     // Constructor function for our CustomScrollView class
     function CustomScrollView() {
-
         // Applies View's constructor function to CustomScrollView class
         ScrollView.apply(this, arguments);
     }

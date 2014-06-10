@@ -6,21 +6,17 @@ define(function(require, exports, module) {
 
     // Import additional modules to be used in this view
     var View            = require('famous/core/View');
-    var Surface         = require('famous/core/Surface');
+    // var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
     var RenderNode      = require('famous/core/RenderNode');
-
     var StateModifier   = require('famous/modifiers/StateModifier');
-
-    var Easing          = require('famous/transitions/Easing');
-
     var ImageSurface    = require('famous/surfaces/ImageSurface');
-
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
     var ChatHeaderView  = require('views/ChatHeaderView');
     var ChatFooterView  = require('views/ChatFooterView');
     var ScrollView      = require('views/CustomScrollView');
+    var MessageView      = require('views/MessageView');
 
     // Constructor function for our ChatView class
     function ChatView() {
@@ -28,7 +24,6 @@ define(function(require, exports, module) {
         this.messages = [];
         this.messagesRaw = [];
         this.latestMessageDate = new Date(-1);
-
 
         // Applies View's constructor function to ChatView class
         View.apply(this, arguments);
