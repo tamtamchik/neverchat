@@ -15,11 +15,11 @@ define(function(require, exports, module) {
     var Easing          = require('famous/transitions/Easing');
 
     var ImageSurface    = require('famous/surfaces/ImageSurface');
-    var InputSurface    = require('famous/surfaces/InputSurface');
 
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
     var ChatHeaderView  = require('views/ChatHeaderView');
+    var ChatFooterView  = require('views/ChatFooterView');
     var ScrollView      = require('views/CustomScrollView');
 
     // Constructor function for our ChatView class
@@ -37,7 +37,6 @@ define(function(require, exports, module) {
         _createLayout.call(this);
         _createHeader.call(this);
         _createFooter.call(this);
-        _createFooterInputs.call(this);
         _createContent.call(this);
 
         _setListeners.call(this);
@@ -50,36 +49,8 @@ define(function(require, exports, module) {
     // Default options for ChatView class
     ChatView.DEFAULT_OPTIONS = {
         animationDuration: 1200, // TODO: play with duration
-        backgroundProperties: {
-            backgroundColor: 'rgba(220, 220, 220, 0.5)'
-        },
         footerSize: 42,
-        headerSize: 64,
-        messageButtonOptions: {
-            height: '26px',
-            lineHeight: '26px',
-            border: '2px solid transparent',
-            background: 'transparent',
-            textAlign: 'center',
-            fontSize: '16px',
-            color: 'rgba(255, 255, 255, 1)',
-            boxShadow: 'none',
-            fontWeight: '600',
-            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
-        },
-        messageInputOptions: {
-            height: '26px',
-            padding: '1px 5px',
-            lineHeight: '26px',
-            border: '2px solid rgba(255, 255, 255, 0.9)',
-            background: 'transparent',
-            borderRadius: '5px',
-            fontSize: '16px',
-            color: 'rgba(255, 255, 255, 1)',
-            boxShadow: 'none',
-            textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
-        },
-        sendButtonWidth: 60
+        headerSize: 64
     };
 
     // Define your helper functions and prototype methods here
@@ -134,76 +105,27 @@ define(function(require, exports, module) {
     }
 
     function _createFooter() {
-        this.footerBackgroundSurface = new Surface({
-            properties: this.options.backgroundProperties
-        });
+        this.chatFooterView = new ChatFooterView();
 
-        this.footerLayout = new HeaderFooter({
-            headerSize: 4,
-            footerSize: this.options.sendButtonWidth,
-            direction: 0
-        });
-
-        var layoutModifier = new StateModifier({
-            transform: Transform.translate(0, 0, 0.1)
-        });
-
-        this.footerBackgroundModifier = new StateModifier({
-            opacity: 0,
-            transform: Transform.behind
-        });
-
-        this.layout.footer.add(this.footerBackgroundModifier).add(this.footerBackgroundSurface);
-        this.layout.footer.add(layoutModifier).add(this.footerLayout);
-    }
-
-    function _createFooterInputs() {
-        this.messageInput = new InputSurface({
-            size: [undefined, 32],
-            origin: [0.5, 0.5],
-            name: 'messageInput',
-            placeholder: 'Type message here',
-            value: '',
-            type: 'text',
-            properties: this.options.messageInputOptions
-        });
-
-        this.messageButton = new Surface({
-            classes: ['no-selection'],
-            size: [this.options.sendButtonWidth-8, 32],
-            origin: [0.5, 0.5],
-            content: 'Send',
-            properties: this.options.messageButtonOptions
-        });
-
-        this.messageInputModifier = new StateModifier({
-            origin: [0.5, 0.5],
+        this.chatFooterModifier = new StateModifier({
             opacity: 0
         });
 
-        this.messageButtonModifier = new StateModifier({
-            origin: [0.5, 0.5],
-            opacity: 0
-        });
-
-        this.footerLayout.content.add(this.messageInputModifier).add(this.messageInput);
-        this.footerLayout.footer.add(this.messageButtonModifier).add(this.messageButton);
+        this.layout.footer.add(this.chatFooterModifier).add(this.chatFooterView);
     }
 
     // Show main GUI with effects
     function _showGUI() {
         // Make visible other surfaces
-        this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration });
-        this.footerBackgroundModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        this.messageInputModifier.setOpacity(1, { duration: this.options.animationDuration });
-        this.messageButtonModifier.setOpacity(1, { duration: this.options.animationDuration });
-
+        this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.chatFooterModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         // bounce title and make it wisible
         this.chatHeaderView.bounceTitle();
     }
 
     function _setListeners() {
         // TODO: put listeners here
+        this.on('resize',_generateBackground.bind(this));
     }
 
     // Create base ScrollView
@@ -251,7 +173,7 @@ define(function(require, exports, module) {
             '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
             '<span class="message-text">' + Base64.decode(msg.content.message) +
             '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '>' +
-            '<i class="fa fa-clock-o"></i> ' + _timeAgo(new Date(msg.created).getTime()) + '</span></div>',
+            '<i class="fa fa-clock-o"></i> ' + msg.created + '</span></div>',
           size: [undefined, 66]
         });
         surface.pipe(this.scrollView);
