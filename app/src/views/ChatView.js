@@ -1,8 +1,8 @@
 /* globals define, Trianglify, Base64, md5 */
 define(function(require, exports, module) {
 
-    // import other dependencies
-    require('js-base64');
+    // =================================================================================================================
+    require('js-base64');                                                                       // Require extra modules
 
     // Import additional modules to be used in this view
     var View            = require('famous/core/View');
@@ -15,11 +15,11 @@ define(function(require, exports, module) {
 
     var ChatHeaderView  = require('views/ChatHeaderView');
     var ChatFooterView  = require('views/ChatFooterView');
-    var ScrollView      = require('views/CustomScrollView');
-    var MessageView      = require('views/MessageView');
+    var ScrollView      = require('views/ChatScrollView');
+    var MessageView     = require('views/MessageView');
 
-    // Constructor function for our ChatView class
-    function ChatView() {
+    // =================================================================================================================
+    function ChatView() {                                                 // Constructor function for our ChatView class
 
         this.messages = [];
         this.messagesRaw = [];
@@ -41,15 +41,20 @@ define(function(require, exports, module) {
     ChatView.prototype = Object.create(View.prototype);
     ChatView.prototype.constructor = ChatView;
 
-    // Default options for ChatView class
-    ChatView.DEFAULT_OPTIONS = {
+    // =================================================================================================================
+    ChatView.DEFAULT_OPTIONS = {                                                   // Default options for ChatView class
         animationDuration: 1200, // TODO: play with duration
         footerSize: 42,
         headerSize: 64
     };
 
     // Define your helper functions and prototype methods here
-    // Use Trianglify to generate random background for application
+
+    // =================================================================================================================
+                                                                                                       // Layout section
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Use Trianglify to generate random background for application                             // Background generation
     // TODO: change code to require Trianglify instead of appending it to HTML
     function _generateBackground() {
         var t = new Trianglify();
@@ -74,8 +79,8 @@ define(function(require, exports, module) {
         .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
     }
 
-    // Creates inital HeaderFooter layout
-    function _createLayout() {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createLayout() {                                                     // Creates inital HeaderFooter layout
         this.layout = new HeaderFooter({
             headerSize: this.options.headerSize,
             footerSize: this.options.footerSize
@@ -88,8 +93,8 @@ define(function(require, exports, module) {
         this.add(layoutModifier).add(this.layout);
     }
 
-    // Creates Chat Header & Footer zones
-    function _createHeader() {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createHeader() {                                                     // Creates Chat Header & Footer zones
         this.chatHeaderView = new ChatHeaderView();
 
         this.chatHeaderModifier = new StateModifier({
@@ -109,22 +114,8 @@ define(function(require, exports, module) {
         this.layout.footer.add(this.chatFooterModifier).add(this.chatFooterView);
     }
 
-    // Show main GUI with effects
-    function _showGUI() {
-        // Make visible other surfaces
-        this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        this.chatFooterModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        // bounce title and make it wisible
-        this.chatHeaderView.bounceTitle();
-    }
-
-    function _setListeners() {
-        // TODO: put listeners here
-        this.on('resize',_generateBackground.bind(this));
-    }
-
-    // Create base ScrollView
-    function _createContent() {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createContent() {                                                                // Create base ScrollView
         this.scrollView = new ScrollView();
         this.layout.content.add(this.scrollView);
 
@@ -137,7 +128,30 @@ define(function(require, exports, module) {
         this.scrollView.sequenceFrom(this.messages);
     }
 
-    ChatView.prototype.loadMessages = function(res) {
+    // -----------------------------------------------------------------------------------------------------------------
+    function _showGUI() {                                                                    // GUI appearence animation
+        // Make visible other surfaces
+        this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.chatFooterModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+
+        // bounce title and make it wisible
+        this.chatHeaderView.bounceTitle();
+    }
+
+    // =================================================================================================================
+                                                                                                       // Events section
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _setListeners() {                                                                          // Set listeners
+        // TODO: put listeners here
+        this.on('resize',_generateBackground.bind(this));
+    }
+
+    // =================================================================================================================
+                                                                                                      // Methods section
+
+    // -----------------------------------------------------------------------------------------------------------------
+    ChatView.prototype.loadMessages = function(res) {                                                   // Load messages
         var i;
         if (res && res.this !== 'failed') {
             for (i = res.with.length - 1; i >= 0; i--) {
@@ -160,7 +174,8 @@ define(function(require, exports, module) {
         }
     };
 
-    ChatView.prototype.renderMessage = function(msg) {
+    // -----------------------------------------------------------------------------------------------------------------
+    ChatView.prototype.renderMessage = function(msg) {                                                 // Render message
       if (msg) {
         var surface = new MessageView({
             data: msg
@@ -171,5 +186,6 @@ define(function(require, exports, module) {
       }
     };
 
-    module.exports = ChatView;
+    // =================================================================================================================
+    module.exports = ChatView;                                                                          // Module export
 });
