@@ -167,19 +167,12 @@ define(function(require, exports, module) {
 
     ChatView.prototype.renderMessage = function(msg) {
       if (msg) {
-        var surface = new MessageBox({
-          classes: ['message','message-wrapper'],
-          content: '<img class="author" src="http://www.gravatar.com/avatar/' + msg.content.user.toString() +
-            '?s=200&d=identicon"><i class="fa fa-caret-left"></i><div class="item">' +
-            '<span class="message-text">' + Base64.decode(msg.content.message) +
-            '&nbsp;</span><span class="timeago" date=' + new Date(msg.created).getTime() + '>' +
-            '<i class="fa fa-clock-o"></i> ' + msg.created + '</span></div>',
-          size: [undefined, 66]
+        var surface = new MessageView({
+            data: msg
         });
+
         surface.pipe(this.scrollView);
         this.messages.push(surface);
-        this.scrollView.goToNextPage();
-        this.scrollView.goToNextPage();
       }
     };
 

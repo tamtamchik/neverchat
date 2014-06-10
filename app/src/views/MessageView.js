@@ -1,10 +1,9 @@
-
 /* globals define */
 define(function(require, exports, module) {
 
     // Import additional modules to be used in this view
     var View            = require('famous/core/View');
-    var Surface         = require('famous/core/Surface');
+    // var Surface         = require('famous/core/Surface');
     // var Transform       = require('famous/core/Transform');
     // var StateModifier   = require('famous/modifiers/StateModifier');
 
