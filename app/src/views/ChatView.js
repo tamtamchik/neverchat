@@ -159,7 +159,6 @@ define(function(require, exports, module) {
 
     function _createFooterInputs() {
         this.messageInput = new InputSurface({
-            classes: ['no-selection'],
             size: [undefined, 32],
             origin: [0.5, 0.5],
             name: 'messageInput',

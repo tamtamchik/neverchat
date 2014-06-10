@@ -71,7 +71,7 @@ define(function(require, exports, module) {
         this.headerTitleModifier.setTransform(
             Transform.translate(0, this.options.titleOffset, 0),
             { duration : this.options.animationDuration * 2, curve: Easing.outElastic });
-    }
+    };
 
     module.exports = ChatHeaderView;
 });
