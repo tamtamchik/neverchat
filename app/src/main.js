@@ -1,15 +1,15 @@
 /* globals define */
 define(function(require) {
     'use strict';
-    // import dependencies
-    var Engine = require('famous/core/Engine');
+    // =================================================================================================================
+    var Engine      = require('famous/core/Engine');                                            // Require extra modules
+    var AppView     = require('views/AppView');
 
-    // import the AppView class using require
-    var AppView = require('views/AppView');
-    var appView = new AppView();
+    // =================================================================================================================
+    var mainContext = Engine.createContext();                                              // Application initialization
+    var appView     = new AppView();
 
-    // create the main context
-    var mainContext = Engine.createContext();
-    mainContext.setPerspective(1000);
+    // =================================================================================================================
+    mainContext.setPerspective(1000);                                            // Main context init and appView render
     mainContext.add(appView);
 });
