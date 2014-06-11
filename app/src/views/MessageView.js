@@ -1,8 +1,8 @@
-/* globals define, md5 */
+/* globals define, md5, Base64 */
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    var base64             = require('js-base64');                                                // Require extra modules
+                            require('js-base64');                                               // Require extra modules
     var View               = require('famous/core/View');
     var Surface            = require('famous/core/Surface');
     var Transform          = require('famous/core/Transform');
@@ -12,7 +12,7 @@ define(function(require, exports, module) {
     var Timer              = require('famous/utilities/Timer');
 
     // =================================================================================================================
-    function MessageView(msg) {                                               // Constructor function for MessageView class
+    function MessageView(msg) {                                            // Constructor function for MessageView class
         this.message = msg.data;
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     function _createMessageBox() {                                                           // Creates main message box
-        var _this = this;
+        var that = this;
 
         var messageBox = new Surface({
             size: [window.innerWidth - this.options.avatarOffset * 3 - this.options.avatarWidth, undefined],
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
                 background: 'rgba(255, 255, 255, 0.5)',
                 lineHeight: '1.6em',
                 borderRadius: '4px',
-                fontSize: '14px',
+                fontSize: '14px'
             }
         });
 
@@ -99,28 +99,32 @@ define(function(require, exports, module) {
         messageBox.pipe(this.container);
         this.container.add(messageBoxModifier).add(messageBox);
 
-        Timer.setInterval(function(){
+        // Make adjustments to content size
+        Timer.setInterval(function() {
+            // Defining sizes
             var contentHeight           = messageBox._currTarget.firstChild.offsetHeight;
-            var currentContainerSizes   = _this.container.getSize();
+            var currentContainerSizes   = that.container.getSize();
             var currentMessageBoxSizes  = messageBox.getSize();
             var containerHieght         = contentHeight + 8 + 10;
             currentMessageBoxSizes[1]   = currentMessageBoxSizes[1] ? currentMessageBoxSizes[1] : 0;
 
-            if (containerHieght < _this.options.avatarHeight) {
-                containerHieght = _this.options.avatarHeight
+            // Checking the most relevant size
+            if (containerHieght < that.options.avatarHeight) {
+                containerHieght = that.options.avatarHeight;
             }
             if (currentMessageBoxSizes[1] < contentHeight) {
+                // Change size animation
                 messageBox.setSize([currentMessageBoxSizes[0], contentHeight],
-                    { duration: _this.options.animationDuration / 3 });
-                _this.containerModifier.setSize([
+                    { duration: that.options.animationDuration / 3 });
+                that.containerModifier.setSize([
                     currentContainerSizes[0],
-                    containerHieght + _this.options.avatarOffset * 2],
-                    { duration: _this.options.animationDuration / 3 }
+                    containerHieght + that.options.avatarOffset * 2],
+                    { duration: that.options.animationDuration / 3 }
                 );
             }
-            currentMessageBoxSizes  = messageBox.getSize();
-            messageBoxModifier.setOpacity(1, { duration: _this.options.animationDuration / 3 });
-        }, 1000)
+            // Showing message baloon
+            messageBoxModifier.setOpacity(1, { duration: that.options.animationDuration / 3 });
+        }, 100);
     }
 
     // =================================================================================================================
