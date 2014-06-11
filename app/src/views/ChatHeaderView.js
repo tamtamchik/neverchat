@@ -76,7 +76,7 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatHeaderView.prototype.bounceTitle = function() {                              // Initial bouncing title animation
+    ChatHeaderView.prototype.bounceTitle = function bounceTitle() {                  // Initial bouncing title animation
         this.headerTitleModifier.setTransform(
             Transform.translate(0, this.options.titleOffset, this.options.baseZIndex + 1),
             { duration : this.options.animationDuration * 2, curve: Easing.outElastic });

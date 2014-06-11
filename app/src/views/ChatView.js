@@ -153,7 +153,7 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.loadMessages = function(res) {                     // Load messages via dweet adapter as callback
+    ChatView.prototype.loadMessages = function loadMessages(res) {        // Load messages via dweet adapter as callback
         var i;
         if (res && res.this !== 'failed') {
             for (i = res.with.length - 1; i >= 0; i--) {
@@ -177,7 +177,7 @@ define(function(require, exports, module) {
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.renderMessage = function(msg) {                                          // Render single message
+    ChatView.prototype.renderMessage = function renderMessage(msg) {                            // Render single message
       if (msg) {
         var surface = new MessageView({
             data: msg
