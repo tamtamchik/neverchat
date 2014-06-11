@@ -1,4 +1,4 @@
-/* globals define, md5, Base64 */
+/* globals define, Base64 */
 define(function(require, exports, module) {
 
     // =================================================================================================================

@@ -1,4 +1,4 @@
-/* globals define, Trianglify */
+/* globals define, Trianglify, md5 */
 define(function(require, exports, module) {
 
     // =================================================================================================================
@@ -126,7 +126,7 @@ define(function(require, exports, module) {
         this.scrollContainerModifier = new StateModifier();
         this.scrollViewModifier = new StateModifier();
 
-        this.scrollContainer.add(this.scrollViewModifier).add(this.scrollView)
+        this.scrollContainer.add(this.scrollViewModifier).add(this.scrollView);
         this.layout.content.add(this.scrollContainerModifier).add(this.scrollContainer);
 
         this.scrollNode = new RenderNode(this.scrollViewModifier);
