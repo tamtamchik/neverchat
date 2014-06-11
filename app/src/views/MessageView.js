@@ -124,7 +124,7 @@ define(function(require, exports, module) {
             }
             // Showing message baloon
             messageBoxModifier.setOpacity(1, { duration: that.options.animationDuration / 3 });
-        }, 100);
+        }, this.options.animationDuration / 3);
     }
 
     // =================================================================================================================
