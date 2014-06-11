@@ -36,7 +36,8 @@ define(function(require, exports, module) {
             letterSpacing: '1px',
             textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         },
-        titleWidth: 300
+        titleWidth: 300,
+        baseZIndex: 1
     };
 
     // =================================================================================================================
@@ -58,11 +59,12 @@ define(function(require, exports, module) {
         });
 
         this.headerBackgroundModifier = new StateModifier({
-            transform: Transform.behind
+            transform: Transform.translate(0, 0, this.options.baseZIndex)
         });
 
         this.headerTitleModifier = new StateModifier({
-            origin: [0.5, 0]
+            origin: [0.5, 0],
+            transform: Transform.translate(0, 0, this.options.baseZIndex + 1)
         });
 
         // Adding elements to the view
@@ -76,7 +78,7 @@ define(function(require, exports, module) {
     // -----------------------------------------------------------------------------------------------------------------
     ChatHeaderView.prototype.bounceTitle = function() {                              // Initial bouncing title animation
         this.headerTitleModifier.setTransform(
-            Transform.translate(0, this.options.titleOffset, 0),
+            Transform.translate(0, this.options.titleOffset, this.options.baseZIndex + 1),
             { duration : this.options.animationDuration * 2, curve: Easing.outElastic });
     };
 

@@ -53,7 +53,8 @@ define(function(require, exports, module) {
             boxShadow: 'none',
             textShadow: '0px 1px 1px rgba(100,100,100,0.5)'
         },
-        sendButtonWidth: 60
+        sendButtonWidth: 60,
+        baseZIndex: 1
     };
 
     // =================================================================================================================
@@ -74,11 +75,11 @@ define(function(require, exports, module) {
         });
 
         var layoutModifier = new StateModifier({
-            transform: Transform.translate(0, 0, 0.1)
+            transform: Transform.translate(0, 0, this.options.baseZIndex + 1)
         });
 
         this.footerBackgroundModifier = new StateModifier({
-            transform: Transform.behind
+            transform: Transform.translate(0, 0, this.options.baseZIndex)
         });
 
         // Adding elements to the view
