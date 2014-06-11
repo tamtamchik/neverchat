@@ -54,3 +54,19 @@ textarea, input[type="text"], input[type="submit"] {
   -ms-user-select: none;
   user-select: none;
 }
+
+.text-surface {
+  padding: 5px 10px;
+}
+
+.text-surface:before {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.5);
+  top: 5px;
+  left: -5px;
+  width: 7px;
+  overflow: hidden;
+  content: '\f0d9';
+  font-size: 14px;
+  font-family:'FontAwesome'
+}

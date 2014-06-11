@@ -1,23 +1,24 @@
-/* globals define, Trianglify, Base64, md5 */
+/* globals define, Trianglify */
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    var base64          = require('js-base64');                                                 // Require extra modules
-    var View            = require('famous/core/View');
-    // var Surface         = require('famous/core/Surface');
-    var Transform       = require('famous/core/Transform');
-    var RenderNode      = require('famous/core/RenderNode');
-    var StateModifier   = require('famous/modifiers/StateModifier');
-    var ImageSurface    = require('famous/surfaces/ImageSurface');
-    var HeaderFooter    = require('famous/views/HeaderFooterLayout');
+    // var base64           = require('js-base64');                                             // Require extra modules
+    var View                = require('famous/core/View');
+    // var Surface          = require('famous/core/Surface');
+    var Transform           = require('famous/core/Transform');
+    var RenderNode          = require('famous/core/RenderNode');
+    var StateModifier       = require('famous/modifiers/StateModifier');
+    var ImageSurface        = require('famous/surfaces/ImageSurface');
+    var ContainerSurface    = require('famous/surfaces/ContainerSurface');
+    var HeaderFooter        = require('famous/views/HeaderFooterLayout');
 
     // Custom modules
-    var ChatHeaderView  = require('views/ChatHeaderView');
-    var ChatFooterView  = require('views/ChatFooterView');
-    var ScrollView      = require('views/ChatScrollView');
-    var MessageView     = require('views/MessageView');
+    var ChatHeaderView      = require('views/ChatHeaderView');
+    var ChatFooterView      = require('views/ChatFooterView');
+    var ScrollView          = require('views/ChatScrollView');
+    var MessageView         = require('views/MessageView');
 
-    var Dweet           = require('DweetAdapter');
+    var Dweet               = require('DweetAdapter');
 
     // =================================================================================================================
     function ChatView() {                                                     // Constructor function for ChatView class
@@ -76,9 +77,9 @@ define(function(require, exports, module) {
         this.add(backModifier).add(this.backSurface);
 
         backModifier
-        .setOpacity(0, { duration: this.options.animationDuration / 3 })
-        // TODO: make showGUI after login
-        .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
+            .setOpacity(0, { duration: this.options.animationDuration / 3 })
+            // TODO: make showGUI after login
+            .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -118,14 +119,17 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     function _createContent() {                                                               // Creates base ScrollView
+
+        this.scrollContainer = new ContainerSurface();
         this.scrollView = new ScrollView();
-        this.layout.content.add(this.scrollView);
 
-        this.scrollModifier = new StateModifier({
-            size: [undefined, 66]}
-        );
+        this.scrollContainerModifier = new StateModifier();
+        this.scrollViewModifier = new StateModifier();
 
-        this.scrollNode = new RenderNode(this.scrollModifier);
+        this.scrollContainer.add(this.scrollViewModifier).add(this.scrollView)
+        this.layout.content.add(this.scrollContainerModifier).add(this.scrollContainer);
+
+        this.scrollNode = new RenderNode(this.scrollViewModifier);
         this.scrollNode.add(this.scrollView);
         this.scrollView.sequenceFrom(this.messages);
     }
@@ -192,7 +196,7 @@ define(function(require, exports, module) {
     function _start() {
         var channel = 'neverchat_';
         channel += md5('');
-        dweets = new Dweet(channel);
+        var dweets = new Dweet(channel);
         dweets.getFeed(this.loadMessages, this);
     }
 
