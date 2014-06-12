@@ -3,23 +3,33 @@ define(function(require, exports, module) {
 
     // =================================================================================================================
                             require('js-base64');                                               // Require extra modules
-    var View               = require('famous/core/View');
-    var Surface            = require('famous/core/Surface');
-    var Transform          = require('famous/core/Transform');
-    var StateModifier      = require('famous/modifiers/StateModifier');
-    var ImageSurface       = require('famous/surfaces/ImageSurface');
-    var ContainerSurface   = require('famous/surfaces/ContainerSurface');
-    var Timer              = require('famous/utilities/Timer');
+    var View                = require('famous/core/View');
+    var Surface             = require('famous/core/Surface');
+    var Transform           = require('famous/core/Transform');
+    var StateModifier       = require('famous/modifiers/StateModifier');
+    var ImageSurface        = require('famous/surfaces/ImageSurface');
+    var ContainerSurface    = require('famous/surfaces/ContainerSurface');
+    var Timer               = require('famous/utilities/Timer');
+    var HeaderFooter        = require('famous/views/HeaderFooterLayout');
 
     // =================================================================================================================
     function MessageView(msg) {                                            // Constructor function for MessageView class
-        this.message = msg.data;
+        var that            = this;
+        this.message        = msg.data;
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
 
         _createBaseSurface.call(this);
-        _createAvatar.call(this);
-        _createMessageBox.call(this);
+        _createAvatarSurface.call(this);
+        _createMessageBoxSurface.call(this);
+        _createTimeSurface.call(this);
+
+        // Setup call of sizing function and time ago update
+        Timer.setInterval(function() {
+            if (that.messageBox._currTarget) {
+                that.tickActions.call(that);
+            }
+        }, this.options.animationDuration / 10);
     }
 
     // Establishes prototype chain for MessageView class to inherit from View
@@ -36,11 +46,28 @@ define(function(require, exports, module) {
             borderRadius: '999em'
         },
         avatarUrl: {
-            prefix: 'http://www.gravatar.com/avatar/',
-            postfix: '?s=200&d=identicon'
+            postfix: '?s=200&d=identicon',
+            prefix: 'http://www.gravatar.com/avatar/'
         },
         avatarWidth: 50,
-        messageMinHeight: 70
+        messageBoxProperties: {
+                background: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: '4px',
+                fontSize: '14px',
+                fontWeight: '300',
+                lineHeight: '1.6em',
+                margin: '8px 0 0 20px'
+        },
+        messageMinHeight: 70,
+        timeAgoProperties: {
+            fontSize: '10px',
+            color: 'rgba(255, 255, 255, 1)',
+            textAlign: 'right',
+            lineHeight: '16px',
+            fontWeight: '400',
+            paddingRight: '10px',
+            created: null
+        }
     };
 
     // =================================================================================================================
@@ -54,72 +81,139 @@ define(function(require, exports, module) {
 
         this.containerModifier.setSize([undefined, this.options.messageMinHeight]);
 
+        this.layout = new HeaderFooter({
+            headerSize: this.options.messageMinHeight,
+            footerSize: 20
+        });
+
+        this.layoutModifier = new StateModifier();
+
+        this.container.add(this.layoutModifier).add(this.layout);
         this.container.pipe(this._eventOutput);
         this.add(this.containerModifier).add(this.container);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createAvatar() {                                                                      // Avatar generation
-        var avatar = new ImageSurface({
-            classes: ['no-selection'],
+    function _createAvatarSurface() {                                                               // Avatar generation
+        this.avatar = new ImageSurface({
+            classes: ['no-selection', 'avatar'],
             size: [this.options.avatarHeight, this.options.avatarWidth],
             content: this.options.avatarUrl.prefix + this.message.content.user + this.options.avatarUrl.postfix,
             properties: this.options.avatarProperties
         });
 
-        var avatarModifier = new StateModifier({
+        this.avatarModifier = new StateModifier({
+            opacity: 0,
+            origin: [0, 0],
             transform: Transform.translate(this.options.avatarOffset, this.options.avatarOffset, 0.1)
         });
 
-        avatar.pipe(this.container);
-        this.container.add(avatarModifier).add(avatar);
+        this.avatar.pipe(this.container);
+        this.layout.header.add(this.avatarModifier).add(this.avatar);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createMessageBox() {                                                           // Creates main message box
-        var that = this;
-
-        var messageBox = new Surface({
+    function _createMessageBoxSurface() {                                                    // Creates main message box
+        this.messageBox = new Surface({
             size: [window.innerWidth - this.options.avatarOffset * 3 - this.options.avatarWidth, undefined],
             content: '<div class="text-surface">' + Base64.decode(this.message.content.message) + '</div>',
-            properties: {
-                margin: '8px 0 0 60px',
-                background: 'rgba(255, 255, 255, 0.5)',
-                lineHeight: '1.6em',
-                borderRadius: '4px',
-                fontSize: '14px'
-            }
+            properties: this.options.messageBoxProperties
         });
 
-        var messageBoxModifier = new StateModifier({
+        this.messageBoxModifier = new StateModifier({
             opacity: 0,
+            origin: [0.5, 0],
             transform: Transform.translate(this.options.avatarOffset, this.options.avatarOffset, 0.1)
         });
 
-        messageBox.pipe(this.container);
-        this.container.add(messageBoxModifier).add(messageBox);
+        this.messageBox.pipe(this.container);
+        this.layout.header.add(this.messageBoxModifier).add(this.messageBox);
+    }
 
-        // Setup call of sizing function and time ago update
-        Timer.setInterval(function() {
-            if (messageBox && messageBoxModifier && messageBox._currTarget) {
-                that.tickActions.call(that, {
-                    el: messageBox._currTarget.firstChild,
-                    box: messageBox,
-                    modifier: messageBoxModifier
-                });
-            }
-        }, this.options.animationDuration / 3);
+    // -----------------------------------------------------------------------------------------------------------------
+    function _createTimeSurface() {                                                             // Creates time ago zone
+        this.options.timeAgoProperties.created = new Date(this.message.created).getTime();
+
+        this.timeAgo = new Surface({
+            classes: ['no-selection', 'timeago'],
+            content: '<i class="fa fa-clock-o"></i> ' + _timeAgo(new Date(this.message.created).getTime()) + '</span>',
+            properties: this.options.timeAgoProperties
+        });
+
+        this.timeAgoModifier = new StateModifier({
+            opacity: 0
+        });
+
+        this.timeAgo.pipe(this.container);
+        this.layout.footer.add(this.timeAgoModifier).add(this.timeAgo);
+    }
+
+    // =================================================================================================================
+                                                                                            // Private functions section
+    // -----------------------------------------------------------------------------------------------------------------
+    function _calcTime(offset, seconds) {                                                // Transforms offset to seconds
+      return Math.round(Math.abs(offset / seconds));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _getTimeParams(offset) {                                                 // Returns type offset as a string
+        var span   = [];
+
+        if (offset <= 60) {
+            span = [ _calcTime(offset, 1), 'seconds' ];
+        }
+        else if (offset < (60 * 60)) {
+            span = [ _calcTime(offset, 60), 'min' ];
+        }
+        else if (offset < (3600 * 24)) {
+            span = [ _calcTime(offset, 3600), 'hr' ];
+        }
+        else if (offset < (86400 * 7)) {
+            span = [ _calcTime(offset, 86400), 'day' ];
+        }
+        else if (offset < (604800 * 52)) {
+            span = [ _calcTime(offset, 604800), 'week' ];
+        }
+        else if (offset < (31556926 * 10)) {
+            span = [ _calcTime(offset, 31556926), 'year' ];
+        }
+        else {
+            span = [ '', 'a long time' ];
+        }
+
+        return span;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _timeAgo(time, local) {                                              // Returns time string in `ago` format
+        if (!local) {
+            local = Date.now();
+        }
+        if (typeof time !== 'number' || typeof local !== 'number') {
+            return;
+        }
+
+        var offset = Math.abs((local - time)/1000);
+        var span   = _getTimeParams(offset);
+
+        span[1] += (span[0] === 0 || span[0] > 1) ? 's' : '';
+        span = span.join(' ');
+
+        return (time <= local) ? span + ' ago' : 'in ' + span;
     }
 
     // =================================================================================================================
                                                                                                       // Methods section
     // -----------------------------------------------------------------------------------------------------------------
-    MessageView.prototype.tickActions = function tickActions(options) {       // Message size adjust and time ago update
+    MessageView.prototype.tickActions = function tickActions() {              // Message size adjust and time ago update
         // Defining sizes
-        var contentHeight           = options.el.offsetHeight;
+        var contentHeight           = this.messageBox._currTarget.firstChild.offsetHeight;
+        var currentMessageBoxSizes  = this.messageBox.getSize();
         var currentContainerSizes   = this.container.getSize();
-        var currentMessageBoxSizes  = options.box.getSize();
         var containerHieght         = contentHeight + 8 + 10;
+        var newDate                 = _timeAgo(parseInt(this.timeAgo.properties.created, 0));
+
+        // checking null size and converting it to 0
         currentMessageBoxSizes[1]   = currentMessageBoxSizes[1] ? currentMessageBoxSizes[1] : 0;
 
         // Checking the most relevant size
@@ -128,7 +222,7 @@ define(function(require, exports, module) {
         }
         if (currentMessageBoxSizes[1] < contentHeight) {
             // Change size animation
-            options.box.setSize([currentMessageBoxSizes[0], contentHeight],
+            this.messageBox.setSize([currentMessageBoxSizes[0], contentHeight],
                 { duration: this.options.animationDuration / 3 });
             this.containerModifier.setSize([
                 currentContainerSizes[0],
@@ -136,8 +230,12 @@ define(function(require, exports, module) {
                 { duration: this.options.animationDuration / 3 }
             );
         }
+
+        this.timeAgo.setContent('<i class="fa fa-clock-o"></i> ' + newDate);
         // Showing message baloon
-        options.modifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.messageBoxModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.avatarModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+        this.timeAgoModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
     };
 
     // =================================================================================================================
