@@ -99,33 +99,46 @@ define(function(require, exports, module) {
         messageBox.pipe(this.container);
         this.container.add(messageBoxModifier).add(messageBox);
 
-        // Make adjustments to content size
+        // Setup call of sizing function and time ago update
         Timer.setInterval(function() {
-            // Defining sizes
-            var contentHeight           = messageBox._currTarget.firstChild.offsetHeight;
-            var currentContainerSizes   = that.container.getSize();
-            var currentMessageBoxSizes  = messageBox.getSize();
-            var containerHieght         = contentHeight + 8 + 10;
-            currentMessageBoxSizes[1]   = currentMessageBoxSizes[1] ? currentMessageBoxSizes[1] : 0;
-
-            // Checking the most relevant size
-            if (containerHieght < that.options.avatarHeight) {
-                containerHieght = that.options.avatarHeight;
+            if (messageBox && messageBoxModifier && messageBox._currTarget) {
+                that.tickActions.call(that, {
+                    el: messageBox._currTarget.firstChild,
+                    box: messageBox,
+                    modifier: messageBoxModifier
+                });
             }
-            if (currentMessageBoxSizes[1] < contentHeight) {
-                // Change size animation
-                messageBox.setSize([currentMessageBoxSizes[0], contentHeight],
-                    { duration: that.options.animationDuration / 3 });
-                that.containerModifier.setSize([
-                    currentContainerSizes[0],
-                    containerHieght + that.options.avatarOffset * 2],
-                    { duration: that.options.animationDuration / 3 }
-                );
-            }
-            // Showing message baloon
-            messageBoxModifier.setOpacity(1, { duration: that.options.animationDuration / 3 });
         }, this.options.animationDuration / 3);
     }
+
+    // =================================================================================================================
+                                                                                                      // Methods section
+    // -----------------------------------------------------------------------------------------------------------------
+    MessageView.prototype.tickActions = function tickActions(options) {       // Message size adjust and time ago update
+        // Defining sizes
+        var contentHeight           = options.el.offsetHeight;
+        var currentContainerSizes   = this.container.getSize();
+        var currentMessageBoxSizes  = options.box.getSize();
+        var containerHieght         = contentHeight + 8 + 10;
+        currentMessageBoxSizes[1]   = currentMessageBoxSizes[1] ? currentMessageBoxSizes[1] : 0;
+
+        // Checking the most relevant size
+        if (containerHieght < this.options.avatarHeight) {
+            containerHieght = this.options.avatarHeight;
+        }
+        if (currentMessageBoxSizes[1] < contentHeight) {
+            // Change size animation
+            options.box.setSize([currentMessageBoxSizes[0], contentHeight],
+                { duration: this.options.animationDuration / 3 });
+            this.containerModifier.setSize([
+                currentContainerSizes[0],
+                containerHieght + this.options.avatarOffset * 2],
+                { duration: this.options.animationDuration / 3 }
+            );
+        }
+        // Showing message baloon
+        options.modifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
+    };
 
     // =================================================================================================================
     module.exports = MessageView;                                                                       // Module export
