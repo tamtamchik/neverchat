@@ -71,3 +71,11 @@ textarea, input[type="text"], input[type="submit"] {
   font-size: 14px;
   font-family:'FontAwesome'
 }
+
+.new {
+  background-color: rgba(250, 250, 255, 0.8) !important;
+}
+
+.new .text-surface:before {
+  color: rgba(250, 250, 255, 0.8);
+}

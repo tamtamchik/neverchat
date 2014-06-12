@@ -16,6 +16,8 @@ define(function(require, exports, module) {
     function MessageView(msg) {                                            // Constructor function for MessageView class
         var that            = this;
         this.message        = msg.data;
+        this.createdTime    = new Date().getTime();
+
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
 
@@ -51,14 +53,15 @@ define(function(require, exports, module) {
         },
         avatarWidth: 50,
         messageBoxProperties: {
-                background: 'rgba(255, 255, 255, 0.5)',
-                borderRadius: '4px',
-                fontSize: '14px',
-                fontWeight: '300',
-                lineHeight: '1.6em',
-                margin: '8px 0 0 20px'
+            background: 'rgba(255, 255, 255, 0.5)',
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: '300',
+            lineHeight: '1.6em',
+            margin: '8px 0 0 20px'
         },
         messageMinHeight: 70,
+        newMessageDelay: 6000,
         timeAgoProperties: {
             fontSize: '10px',
             color: 'rgba(255, 255, 255, 1)',
@@ -115,6 +118,7 @@ define(function(require, exports, module) {
     // -----------------------------------------------------------------------------------------------------------------
     function _createMessageBoxSurface() {                                                    // Creates main message box
         this.messageBox = new Surface({
+            classes: ['new'],
             size: [window.innerWidth - this.options.avatarOffset * 3 - this.options.avatarWidth, undefined],
             content: '<div class="text-surface">' + Base64.decode(this.message.content.message) + '</div>',
             properties: this.options.messageBoxProperties
@@ -206,6 +210,11 @@ define(function(require, exports, module) {
                                                                                                       // Methods section
     // -----------------------------------------------------------------------------------------------------------------
     MessageView.prototype.tickActions = function tickActions() {              // Message size adjust and time ago update
+        // Remove highlight from new messages
+        if (this.createdTime < new Date().getTime() - this.options.newMessageDelay) {
+            this.messageBox.removeClass('new');
+        }
+
         // Defining sizes
         var contentHeight           = this.messageBox._currTarget.firstChild.offsetHeight;
         var currentMessageBoxSizes  = this.messageBox.getSize();
