@@ -1,8 +1,9 @@
-/* globals define, Base64 */
+/* globals define, Base64, converter */
 define(function(require, exports, module) {
 
     // =================================================================================================================
                             require('js-base64');                                               // Require extra modules
+
     var View                = require('famous/core/View');
     var Surface             = require('famous/core/Surface');
     var Transform           = require('famous/core/Transform');
@@ -60,7 +61,7 @@ define(function(require, exports, module) {
             lineHeight: '1.6em',
             margin: '8px 0 0 20px'
         },
-        messageMinHeight: 70,
+        messageMinHeight: 32,
         newMessageDelay: 6000,
         timeAgoProperties: {
             fontSize: '10px',
@@ -120,7 +121,7 @@ define(function(require, exports, module) {
         this.messageBox = new Surface({
             classes: ['new'],
             size: [window.innerWidth - this.options.avatarOffset * 3 - this.options.avatarWidth, undefined],
-            content: '<div class="text-surface">' + Base64.decode(this.message.content.message) + '</div>',
+            content: '<div class="text-surface">' + converter.makeHtml(Base64.decode(this.message.content.message)) + '</div>',
             properties: this.options.messageBoxProperties
         });
 

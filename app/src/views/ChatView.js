@@ -1,4 +1,4 @@
-/* globals define, Trianglify */
+/* globals define */
 define(function(require, exports, module) {
 
     // =================================================================================================================
@@ -29,11 +29,11 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         // Calling functions
-        _generateBackground.call(this);
         _createLayout.call(this);
         _createHeader.call(this);
         _createFooter.call(this);
         _createContent.call(this);
+        _showGUI.call(this);
 
         _setListeners.call(this);
     }
@@ -51,32 +51,6 @@ define(function(require, exports, module) {
 
     // =================================================================================================================
                                                                                                        // Layout section
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Use Trianglify to generate random background for application                             // Background generation
-    // TODO: change code to require Trianglify instead of appending it to HTML
-    function _generateBackground() {
-        var t = new Trianglify();
-        var pattern = t.generate(document.body.clientWidth, document.body.clientHeight);
-
-        this.backSurface = new ImageSurface({
-            size: [undefined, undefined],
-            content: pattern.dataUri
-        });
-
-        var backModifier = new StateModifier({
-            origin: [0.5, 0.5],
-            align: [0.5, 0.5],
-            opacity: 0
-        });
-
-        this.add(backModifier).add(this.backSurface);
-
-        backModifier
-            .setOpacity(0, { duration: this.options.animationDuration / 3 })
-            // TODO: make showGUI after login
-            .setOpacity(1, { duration: this.options.animationDuration / 3 }, _showGUI.bind(this));
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     function _createLayout() {                                                     // Creates inital HeaderFooter layout
@@ -146,7 +120,6 @@ define(function(require, exports, module) {
     // -----------------------------------------------------------------------------------------------------------------
     function _setListeners() {                                                                          // Set listeners
         // TODO: put listeners here
-        this.on('resize',_generateBackground.bind(this));
     }
 
     // =================================================================================================================
