@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, md5 */
 define(function(require, exports, module) {
 
     // =================================================================================================================
@@ -9,6 +9,8 @@ define(function(require, exports, module) {
 
     var ChatView      = require('views/ChatView');
 
+    var Dweet         = require('DweetAdapter');
+
     // =================================================================================================================
     function AppView() {                                                       // Constructor function for AppView class
         // Applies View's constructor function to AppView class
@@ -16,6 +18,10 @@ define(function(require, exports, module) {
 
         // Calling functions
         _createChat.call(this);
+
+        this.options.channel += md5('');
+        var dweets = new Dweet(this.options.channel);
+        dweets.getFeed(_loadInitialMessages, this);
     }
 
     // Establishes prototype chain for AppView class to inherit from View
@@ -23,13 +29,15 @@ define(function(require, exports, module) {
     AppView.prototype.constructor = AppView;
 
     // =================================================================================================================
-    AppView.DEFAULT_OPTIONS = {};                                                   // Default options for AppView class
+    AppView.DEFAULT_OPTIONS = {                                                     // Default options for AppView class
+        channel: 'neverchat_'
+    };
 
     // =================================================================================================================
                                                                                                       // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createChat() {                                 // createChat - initial application function to create chat
+    function _createChat() {                                              // Initial application function to create chat
         this.chatView = new ChatView();
 
         this.chatViewModifier = new StateModifier({
@@ -37,6 +45,11 @@ define(function(require, exports, module) {
         });
 
         this.add(this.chatViewModifier).add(this.chatView);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _loadInitialMessages(res) {                                                         // loading initial feed
+        this.chatView.loadMessages(res);
     }
 
     // =================================================================================================================

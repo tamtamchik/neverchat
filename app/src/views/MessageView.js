@@ -241,6 +241,10 @@ define(function(require, exports, module) {
         }
 
         this.timeAgo.setContent('<i class="fa fa-clock-o"></i> ' + newDate);
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
+    MessageView.prototype.showMessage = function showMessage() {                  // Separate mathod for showing message
         // Showing message baloon
         this.messageBoxModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.avatarModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
