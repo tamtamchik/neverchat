@@ -103,7 +103,7 @@ define(function(require, exports, module) {
                 content: {
                     message: Base64.encode(
                         'Please, tell me your email for **Gravatar**. We promice that it won\'t get furter \
-                        than your device... we\'ll securely keep it encoded by **md5** and use only that way! :]'),
+                        than your device... we\'ll securely keep it encoded by **md5** and use only that way! :3'),
                     user: md5('bot@neverchat.io')
                 }}]
         }
