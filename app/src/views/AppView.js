@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var StateModifier = require('famous/modifiers/StateModifier');
 
     var ChatView      = require('views/ChatView');
+    var LoginView     = require('views/LoginView');
 
     var Dweet         = require('DweetAdapter');
 
@@ -17,11 +18,12 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         // Calling functions
-        _createChat.call(this);
+        // _createChat.call(this);
 
-        this.options.channel += md5('');
-        var dweets = new Dweet(this.options.channel);
-        dweets.getFeed(_loadInitialMessages, this);
+        _showLogin.call();
+        // this.options.channel += md5('');
+        // var dweets = new Dweet(this.options.channel);
+        // dweets.getFeed(_loadInitialMessages, this);
     }
 
     // Establishes prototype chain for AppView class to inherit from View
@@ -34,10 +36,10 @@ define(function(require, exports, module) {
     };
 
     // =================================================================================================================
-                                                                                                      // Methods section
+                                                                                                       // Layout section
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createChat() {                                              // Initial application function to create chat
+    function _createChat() {                                                       // Create chat view and show chat GUI
         this.chatView = new ChatView();
 
         this.chatViewModifier = new StateModifier({
@@ -48,7 +50,21 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _loadInitialMessages(res) {                                                         // loading initial feed
+    function _showLogin() {                                                                          // Create login GUI
+        this.loginView = new LoginView();
+
+        this.loginViewModifier = new StateModifier({
+            transform: Transform.translate(0, 0)
+        });
+
+        this.add(this.loginViewModifier).add(this.loginView);
+    }
+
+    // =================================================================================================================
+                                                                                                      // Methods section
+
+    // -----------------------------------------------------------------------------------------------------------------
+    AppView.prototype.loadMessages = function loadMessages(res) {                                        // Loading feed
         this.chatView.loadMessages(res);
     }
 

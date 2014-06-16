@@ -185,7 +185,7 @@ define(function(require, exports, module) {
 
         surface.pipe(this.scrollView);
         this.messages.push(surface);
-        surface.showMessage()
+        surface.showMessage();
       }
     };
 
