@@ -29,8 +29,9 @@ define(function(require, exports, module) {
 
         var r = new XMLHttpRequest();
         r.open('POST', this.postUrl, true);
-        r.setRequestHeader('Content-length', params.length);
-        r.setRequestHeader('Connection', 'close');
+        // FIXME: coses errors in Safari... need to check
+        // r.setRequestHeader('Content-length', params.length);
+        // r.setRequestHeader('Connection', 'close');
         r.setRequestHeader('Content-Type', 'application/json');
         r.onreadystatechange = function() {
             if (r.readyState !== 4 || r.status !== 200) { return; }

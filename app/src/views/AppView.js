@@ -28,11 +28,11 @@ define(function(require, exports, module) {
 
         _setListeners.call(this);
 
-        Timer.setTimeout(_showLogin.bind(this), 2000);
-
         this.options.channel += md5('');
-        var dweets = new Dweet(this.options.channel);
-        dweets.getFeed(this.loadMessages, this);
+        this.dweets = new Dweet(this.options.channel);
+
+        // Timer.setInterval(_loadFeed.bind(this), 2000);
+        Timer.setTimeout(_showLogin.bind(this), 4000);
     }
 
     // Establishes prototype chain for AppView class to inherit from View
@@ -122,12 +122,17 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    function _loadFeed() {                                                         // Generic function for loading feed
+        this.dweets.getFeed(this.loadMessages, this);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
-        // TODO: fill function
+        this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    AppView.prototype.loadMessages = function loadMessages(res) {                  // Generic function for loading feed
+    AppView.prototype.loadMessages = function loadMessages(res) {              // Generic function for loading messages
         this.chatView.loadMessages(res);
     };
 
