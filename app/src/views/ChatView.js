@@ -2,13 +2,13 @@
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    // var base64           = require('js-base64');                                             // Require extra modules
+    // var base64           = require('js-base64');                                            // Require extra modules
     var View                = require('famous/core/View');
     // var Surface          = require('famous/core/Surface');
     var Transform           = require('famous/core/Transform');
     var RenderNode          = require('famous/core/RenderNode');
     var StateModifier       = require('famous/modifiers/StateModifier');
-    var ImageSurface        = require('famous/surfaces/ImageSurface');
+    // var ImageSurface        = require('famous/surfaces/ImageSurface');
     var ContainerSurface    = require('famous/surfaces/ContainerSurface');
     var HeaderFooter        = require('famous/views/HeaderFooterLayout');
 
@@ -19,7 +19,7 @@ define(function(require, exports, module) {
     var MessageView         = require('views/MessageView');
 
     // =================================================================================================================
-    function ChatView() {                                                     // Constructor function for ChatView class
+    function ChatView() {                                                    // Constructor function for ChatView class
         // Defining vars
         this.messages = [];
         this.messagesRaw = [];
@@ -43,17 +43,17 @@ define(function(require, exports, module) {
     ChatView.prototype.constructor = ChatView;
 
     // =================================================================================================================
-    ChatView.DEFAULT_OPTIONS = {                                                   // Default options for ChatView class
+    ChatView.DEFAULT_OPTIONS = {                                                  // Default options for ChatView class
         animationDuration: 1200, // TODO: play with duration
         footerSize: 42,
         headerSize: 64
     };
 
     // =================================================================================================================
-                                                                                                       // Layout section
+                                                                                                      // Layout section
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createLayout() {                                                     // Creates inital HeaderFooter layout
+    function _createLayout() {                                                    // Creates inital HeaderFooter layout
         this.layout = new HeaderFooter({
             headerSize: this.options.headerSize,
             footerSize: this.options.footerSize
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createHeader() {                                                     // Creates Chat Header & Footer zones
+    function _createHeader() {                                                    // Creates Chat Header & Footer zones
         this.chatHeaderView = new ChatHeaderView();
 
         this.chatHeaderModifier = new StateModifier({
@@ -84,11 +84,13 @@ define(function(require, exports, module) {
             opacity: 0
         });
 
+        this.chatFooterView.pipe(this._eventOutput);
+
         this.layout.footer.add(this.chatFooterModifier).add(this.chatFooterView);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createContent() {                                                               // Creates base ScrollView
+    function _createContent() {                                                              // Creates base ScrollView
 
         this.scrollContainer = new ContainerSurface();
         this.scrollView = new ScrollView();
@@ -105,7 +107,7 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _showGUI() {                                                                    // GUI appearence animation
+    function _showGUI() {                                                                   // GUI appearence animation
         // Make visible other surfaces
         this.chatHeaderModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.chatFooterModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
@@ -115,18 +117,18 @@ define(function(require, exports, module) {
     }
 
     // =================================================================================================================
-                                                                                                       // Events section
+                                                                                                      // Events section
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _setListeners() {                                                                          // Set listeners
+    function _setListeners() {                                                                         // Set listeners
         // TODO: put listeners here
     }
 
     // =================================================================================================================
-                                                                                                      // Methods section
+                                                                                                     // Methods section
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.loadMessages = function loadMessages(res) {        // Load messages via dweet adapter as callback
+    ChatView.prototype.loadMessages = function loadMessages(res) {       // Load messages via dweet adapter as callback
         var i;
         if (res && res.this !== 'failed') {
             for (i = res.with.length - 1; i >= 0; i--) {
@@ -150,7 +152,7 @@ define(function(require, exports, module) {
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    ChatView.prototype.renderMessage = function renderMessage(msg) {                            // Render single message
+    ChatView.prototype.renderMessage = function renderMessage(msg) {                           // Render single message
       if (msg) {
         var surface = new MessageView({
             data: msg
@@ -163,5 +165,5 @@ define(function(require, exports, module) {
     };
 
     // =================================================================================================================
-    module.exports = ChatView;                                                                          // Module export
+    module.exports = ChatView;                                                                         // Module export
 });

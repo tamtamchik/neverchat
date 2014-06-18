@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    var View            = require('famous/core/View');                                          // Require extra modules
+    var View            = require('famous/core/View');                                         // Require extra modules
     var Surface         = require('famous/core/Surface');
     var Transform       = require('famous/core/Transform');
     var StateModifier   = require('famous/modifiers/StateModifier');
@@ -10,13 +10,15 @@ define(function(require, exports, module) {
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
 
     // =================================================================================================================
-    function ChatFooterView() {                                         // Constructor function for ChatFooterView class
+    function ChatFooterView() {                                        // Constructor function for ChatFooterView class
         // Applies View's constructor function to ChatFooterView class
         View.apply(this, arguments);
 
         // Calling functions
         _createFooter.call(this);
         _createInputs.call(this);
+
+        _setListeners.call(this);
     }
 
     // Establishes prototype chain for ChatFooterView class to inherit from View
@@ -24,7 +26,7 @@ define(function(require, exports, module) {
     ChatFooterView.prototype.constructor = ChatFooterView;
 
     // =================================================================================================================
-    ChatFooterView.DEFAULT_OPTIONS = {                                       // Default options for ChatFooterView class
+    ChatFooterView.DEFAULT_OPTIONS = {                                      // Default options for ChatFooterView class
         animationDuration: 1200, // TODO: play with duration
         backgroundProperties: {
             backgroundColor: 'rgba(220, 220, 220, 0.5)'
@@ -58,10 +60,10 @@ define(function(require, exports, module) {
     };
 
     // =================================================================================================================
-                                                                                                       // Layout section
+                                                                                                      // Layout section
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createFooter() {                                                            // Main footer create function
+    function _createFooter() {                                                           // Main footer create function
         // Background
         this.footerBackgroundSurface = new Surface({
             properties: this.options.backgroundProperties
@@ -88,7 +90,7 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _createInputs() {                                                          // Creates input items in footer
+    function _createInputs() {                                                         // Creates input items in footer
         // Text input
         this.messageInput = new InputSurface({
             size: [undefined, 32],
@@ -123,5 +125,24 @@ define(function(require, exports, module) {
     }
 
     // =================================================================================================================
-    module.exports = ChatFooterView;                                                                    // Module export
+                                                                                                     // Methods section
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _setListeners() {                                                          // Function for event listeners
+        this.messageButton.on('click', _sendMessage.bind(this));
+        this.messageInput.on('keydown', _sendMessage.bind(this));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    function _sendMessage(event) {                                                   // Send message event broadcasting
+        var message = this.messageInput.getValue();
+
+        if (((event.type === 'keydown' && event.which === 13) || (event.type === 'click'))&& message !== '') {
+            this._eventOutput.emit('sendMessage', message);
+            this.messageInput.setValue('');
+        }
+    }
+
+    // =================================================================================================================
+    module.exports = ChatFooterView;                                                                   // Module export
 });
