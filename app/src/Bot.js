@@ -1,3 +1,4 @@
+/* jshint multistr: true */
 /* globals define, md5, Base64 */
 define(function(require, exports, module) {
 

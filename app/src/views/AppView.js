@@ -117,7 +117,6 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
-        var welcomeMessage;
         if (message[0] === '/') {
             this.sendBotMessage(message);
         } else {
