@@ -1,3 +1,5 @@
+converter = new Showdown.converter();
+
 /* globals define */
 define(function(require) {
     'use strict';
