@@ -12,7 +12,7 @@ define(function(require, exports, module) {
             'welcome': 'Welcome, to **neverchat.io**!',
             'email': 'Please, tell me your email for **Gravatar**. \
                 We promice that it won\'t get furter than your device... we\'ll securely keep it encoded by **md5** \
-                and use only that way! :3  ',
+                and use only that way! :3 \n\n To do this you need to send this type of message `/me someone@neverchat.io`',
             // simple commands
             '/m': 'Meow!!! :3',
             '/h': 'I don\'t know how to help you yet...',
