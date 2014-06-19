@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var StateModifier   = require('famous/modifiers/StateModifier');
     var InputSurface    = require('famous/surfaces/InputSurface');
     var HeaderFooter    = require('famous/views/HeaderFooterLayout');
+    var KeyCodes        = require('famous/utilities/KeyCodes');
 
     // =================================================================================================================
     function ChatFooterView() {                                        // Constructor function for ChatFooterView class
@@ -137,7 +138,8 @@ define(function(require, exports, module) {
     function _sendMessage(event) {                                                   // Send message event broadcasting
         var message = this.messageInput.getValue();
 
-        if (((event.type === 'keydown' && event.which === 13) || (event.type === 'click'))&& message !== '') {
+        if (((event.type === 'keydown' && event.which === KeyCodes.ENTER) || (event.type === 'click'))
+            && message !== '') {
             this._eventOutput.emit('sendMessage', message);
             this.messageInput.setValue('');
         }
