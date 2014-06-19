@@ -12,12 +12,14 @@ define(function(require, exports, module) {
     var ChatView            = require('views/ChatView');
 
     var Dweet               = require('DweetAdapter');
+    var Bot                 = require('Bot');
 
     // =================================================================================================================
     function AppView() {                                                      // Constructor function for AppView class
 
         this.messages = [];
         this.feed = [];
+        this.bot = new Bot();
 
         // Applies View's constructor function to AppView class
         View.apply(this, arguments);
@@ -87,30 +89,7 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     function _showLogin() {                                                                         // Create login GUI
-        var welcomeMessage = {
-            with: [{
-                thing: 'welcomeMessage',
-                created: new Date(),
-                content: {
-                    message: Base64.encode('Welcome, to **neverchat.io**!'),
-                    user: md5('bot@neverchat.io')
-                }}]
-        };
-
-        this.chatView.loadMessages(welcomeMessage);
-
-        var helloMessage = {
-            with: [{
-                thing: 'helloMessage',
-                created: new Date(),
-                content: {
-                    message: Base64.encode(
-                        'Please, tell me your email for **Gravatar**. We promice that it won\'t get furter than your device... we\'ll securely keep it encoded by **md5** and use only that way! :3'),
-                    user: md5('bot@neverchat.io')
-                }}]
-        };
-
-        this.chatView.loadMessages(helloMessage);
+        this.sendBotMessage(['welcome','hello']);
     }
 
     // =================================================================================================================
@@ -127,30 +106,22 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    AppView.prototype.sendBotMessage = function sendBotMessage(message) {                    // Sends messages as a bot
+        if (typeof message === 'string') {
+            message = [message];
+        }
+        for (var i = message.length - 1; i >= 0; i--) {
+            this.chatView.loadMessages(this.bot.getMessage(message[i]));
+        }
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
         var welcomeMessage;
         if (message === '/m') {
-            welcomeMessage = {
-            with: [{
-                thing: 'welcomeMessage',
-                created: new Date(),
-                content: {
-                    message: Base64.encode('meow!'),
-                    user: md5('bot@neverchat.io')
-                    }}]
-            };
-            this.chatView.loadMessages(welcomeMessage);
+            this.sendBotMessage('meow');
         } else if (message === '/h') {
-            welcomeMessage = {
-            with: [{
-                thing: 'welcomeMessage',
-                created: new Date(),
-                content: {
-                    message: Base64.encode('how can I help you? prrrrr!'),
-                    user: md5('bot@neverchat.io')
-                    }}]
-            };
-            this.chatView.loadMessages(welcomeMessage);
+            this.sendBotMessage('help');
         } else {
             this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
         }
