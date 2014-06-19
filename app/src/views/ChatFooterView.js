@@ -1,3 +1,4 @@
+/* jslint laxbreak: true */
 /* globals define */
 define(function(require, exports, module) {
 

@@ -7,10 +7,14 @@ define(function(require, exports, module) {
 
         // main bot messages
         this.messages = {
+            // internal
             'welcome': 'Welcome, to **neverchat.io**!',
-            'hello': 'Please, tell me your email for **Gravatar**. We promice that it won\'t get furter than your device... we\'ll securely keep it encoded by **md5** and use only that way! :3',
-            'meow': 'Meow!!! :3',
-            'help': 'I don\'t know how to help you yet...',
+            'email': 'Please, tell me your email for **Gravatar**. \
+                We promice that it won\'t get furter than your device... we\'ll securely keep it encoded by **md5** \
+                and use only that way! :3  ',
+            // simple commands
+            '/m': 'Meow!!! :3',
+            '/h': 'I don\'t know how to help you yet...',
             '404': 'I don\'t know this command... purrr'
         };
     }

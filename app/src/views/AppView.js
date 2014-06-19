@@ -89,7 +89,7 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     function _showLogin() {                                                                         // Create login GUI
-        this.sendBotMessage(['welcome','hello']);
+        this.sendBotMessage(['welcome','email']);
     }
 
     // =================================================================================================================
@@ -110,7 +110,7 @@ define(function(require, exports, module) {
         if (typeof message === 'string') {
             message = [message];
         }
-        for (var i = message.length - 1; i >= 0; i--) {
+        for (var i = 0; i < message.length; i++) {
             this.chatView.loadMessages(this.bot.getMessage(message[i]));
         }
     };
@@ -118,10 +118,8 @@ define(function(require, exports, module) {
     // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
         var welcomeMessage;
-        if (message === '/m') {
-            this.sendBotMessage('meow');
-        } else if (message === '/h') {
-            this.sendBotMessage('help');
+        if (message[0] === '/') {
+            this.sendBotMessage(message);
         } else {
             this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
         }
