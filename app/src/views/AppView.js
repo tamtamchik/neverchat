@@ -128,7 +128,32 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
-        this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
+        var welcomeMessage;
+        if (message === '/m') {
+            welcomeMessage = {
+            with: [{
+                thing: 'welcomeMessage',
+                created: new Date(),
+                content: {
+                    message: Base64.encode('meow!'),
+                    user: md5('bot@neverchat.io')
+                    }}]
+            };
+            this.chatView.loadMessages(welcomeMessage);
+        } else if (message === '/h') {
+            welcomeMessage = {
+            with: [{
+                thing: 'welcomeMessage',
+                created: new Date(),
+                content: {
+                    message: Base64.encode('how can I help you? prrrrr!'),
+                    user: md5('bot@neverchat.io')
+                    }}]
+            };
+            this.chatView.loadMessages(welcomeMessage);
+        } else {
+            this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
+        }
     };
 
     // -----------------------------------------------------------------------------------------------------------------
