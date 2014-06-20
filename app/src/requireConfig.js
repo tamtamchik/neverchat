@@ -13,7 +13,8 @@ require.config({
         d3: '../lib/d3/d3',
         trianglify: '../lib/trianglify/trianglify',
         'js-base64': '../lib/js-base64/base64',
-        showdown: '../lib/showdown/src/showdown'
+        showdown: '../lib/showdown/src/showdown',
+        momentjs: '../lib/momentjs/moment'
     },
     packages: [
 
