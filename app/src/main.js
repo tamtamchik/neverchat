@@ -1,3 +1,4 @@
+/* jshint unused:true */
 /* globals define, Showdown */
 var converter = new Showdown.converter();
 

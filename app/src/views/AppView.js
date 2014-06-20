@@ -1,4 +1,4 @@
-/* globals define, Trianglify, md5, Base64 */
+/* globals define, Trianglify, md5, Base64, moment */
 define(function(require, exports, module) {
 
     // =================================================================================================================
@@ -33,7 +33,7 @@ define(function(require, exports, module) {
         this.options.channel += md5('');
         this.dweets = new Dweet(this.options.channel);
 
-        // Timer.setInterval(_loadFeed.bind(this), 2000);
+        Timer.setInterval(_loadFeed.bind(this), 2000);
         Timer.setTimeout(_showLogin.bind(this), 4000);
     }
 
