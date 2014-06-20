@@ -1,4 +1,4 @@
-/* globals define, Trianglify, md5, Base64, moment */
+/* globals define, Trianglify, md5, Base64 */
 define(function(require, exports, module) {
 
     // =================================================================================================================

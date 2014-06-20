@@ -1,4 +1,4 @@
-/* globals define, Base64, converter */
+/* globals define, Base64, converter, moment */
 define(function(require, exports, module) {
 
     // =================================================================================================================
