@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     // =================================================================================================================
                             require('js-base64');                                               // Require extra modules
+                            require('momentjs');
 
     var View                = require('famous/core/View');
     var Surface             = require('famous/core/Surface');
@@ -17,7 +18,7 @@ define(function(require, exports, module) {
     function MessageView(msg) {                                            // Constructor function for MessageView class
         var that            = this;
         this.message        = msg.data;
-        this.createdTime    = new Date().getTime();
+        this.createdTime    = moment();
 
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
@@ -141,7 +142,7 @@ define(function(require, exports, module) {
 
         this.timeAgo = new Surface({
             classes: ['no-selection', 'timeago'],
-            content: '<i class="fa fa-clock-o"></i> ' + _timeAgo(new Date(this.message.created).getTime()) + '</span>',
+            content: '<i class="fa fa-clock-o"></i> ' + moment(this.message.created).fromNow() + '</span>',
             properties: this.options.timeAgoProperties
         });
 
@@ -154,65 +155,11 @@ define(function(require, exports, module) {
     }
 
     // =================================================================================================================
-                                                                                            // Private functions section
-    // -----------------------------------------------------------------------------------------------------------------
-    function _calcTime(offset, seconds) {                                                // Transforms offset to seconds
-      return Math.round(Math.abs(offset / seconds));
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    function _getTimeParams(offset) {                                                 // Returns type offset as a string
-        var span   = [];
-
-        if (offset <= 60) {
-            span = [ _calcTime(offset, 1), 'seconds' ];
-        }
-        else if (offset < (60 * 60)) {
-            span = [ _calcTime(offset, 60), 'min' ];
-        }
-        else if (offset < (3600 * 24)) {
-            span = [ _calcTime(offset, 3600), 'hr' ];
-        }
-        else if (offset < (86400 * 7)) {
-            span = [ _calcTime(offset, 86400), 'day' ];
-        }
-        else if (offset < (604800 * 52)) {
-            span = [ _calcTime(offset, 604800), 'week' ];
-        }
-        else if (offset < (31556926 * 10)) {
-            span = [ _calcTime(offset, 31556926), 'year' ];
-        }
-        else {
-            span = [ '', 'a long time' ];
-        }
-
-        return span;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    function _timeAgo(time, local) {                                              // Returns time string in `ago` format
-        if (!local) {
-            local = Date.now();
-        }
-        if (typeof time !== 'number' || typeof local !== 'number') {
-            return;
-        }
-
-        var offset = Math.abs((local - time)/1000);
-        var span   = _getTimeParams(offset);
-
-        span[1] += (span[0] === 0 || span[0] > 1) ? 's' : '';
-        span = span.join(' ');
-
-        return (time <= local) ? span + ' ago' : 'in ' + span;
-    }
-
-    // =================================================================================================================
                                                                                                       // Methods section
     // -----------------------------------------------------------------------------------------------------------------
     MessageView.prototype.tickActions = function tickActions() {              // Message size adjust and time ago update
         // Remove highlight from new messages
-        if (this.createdTime < new Date().getTime() - this.options.newMessageDelay) {
+        if (this.createdTime < moment() - this.options.newMessageDelay) {
             this.messageBox.removeClass('new');
         }
 
@@ -221,7 +168,7 @@ define(function(require, exports, module) {
         var currentMessageBoxSizes  = this.messageBox.getSize();
         var currentContainerSizes   = this.container.getSize();
         var containerHieght         = contentHeight + 8 + 10;
-        var newDate                 = _timeAgo(parseInt(this.timeAgo.properties.created, 0));
+        var newDate                 = moment(parseInt(this.timeAgo.properties.created, 0)).fromNow();
 
         // checking null size and converting it to 0
         currentMessageBoxSizes[1]   = currentMessageBoxSizes[1] ? currentMessageBoxSizes[1] : 0;
