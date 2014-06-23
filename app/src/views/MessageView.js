@@ -19,7 +19,6 @@ define(function(require, exports, module) {
         var that            = this;
         this.message        = msg.data;
         this.createdTime    = moment();
-        this.snd            = new Audio('audio/newMessage.mp3');
 
         // Applies View's constructor function to MessageView class
         View.apply(this, arguments);
@@ -198,7 +197,6 @@ define(function(require, exports, module) {
         this.messageBoxModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.avatarModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
         this.timeAgoModifier.setOpacity(1, { duration: this.options.animationDuration / 3 });
-        this.snd.play();
     };
 
     // =================================================================================================================

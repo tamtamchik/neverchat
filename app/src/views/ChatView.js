@@ -23,10 +23,11 @@ define(function(require, exports, module) {
     function ChatView() {                                                    // Constructor function for ChatView class
 
         // Defining vars
-        this.messages = [];
-        this.messagesRaw = [];
-        this.latestMessageDate = new Date(-1);
-        this.currentPage = 0;
+        this.messages           = [];
+        this.messagesRaw        = [];
+        this.latestMessageDate  = new Date(-1);
+        this.currentPage        = 0;
+        this.snd                = new Audio('audio/newMessage.mp3');
 
         // Applies View's constructor function to ChatView class
         View.apply(this, arguments);
@@ -170,6 +171,7 @@ define(function(require, exports, module) {
         surface.pipe(this.scrollView);
         this.messages.push(surface);
         surface.showMessage();
+        this.snd.play();
       }
     };
 
