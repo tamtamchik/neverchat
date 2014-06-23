@@ -44,7 +44,8 @@ define(function(require, exports, module) {
     // =================================================================================================================
     AppView.DEFAULT_OPTIONS = {                                                    // Default options for AppView class
         animationDuration: 1200,
-        channel: 'neverchat_'
+        channel: 'neverchat_',
+        user: ''
     };
 
     // =================================================================================================================
@@ -105,13 +106,54 @@ define(function(require, exports, module) {
         this.dweets.getFeed(this.loadMessages, this);
     }
 
+    AppView.prototype._setUser = function _saveUser(command, message) {
+        var user = message.replace(command, '').trim();
+        var re   = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (user) {
+            if (re.test(user)) {
+                this.options.user = md5(user);
+                this.chatView.loadMessages(this.bot.getMessage('setUser', '', '**' + this.options.user + '**'));
+            } else {
+                this.chatView.loadMessages(this.bot.getMessage('wrongEmail', '**' + user + '**'));
+            }
+        } else {
+            this.chatView.loadMessages(this.bot.getMessage('wrongCommand'));
+        }
+    };
+
+    AppView.prototype._getUser = function _saveUser(message) {
+        if (this.options.user !== '') {
+            this.chatView.loadMessages(this.bot.getMessage('getUser', '', '**' + this.options.user + '** !!! :3'));
+        } else {
+            this.chatView.loadMessages(this.bot.getMessage('noUser'));
+        }
+    };
+
+    AppView.prototype._execCommand = function _execCommand(command, message) {
+        switch (command) {
+            case '/me':
+                this._setUser(command, message);
+                break;
+            case '/who':
+                this._getUser(command, message);
+                break;
+            default:
+                this.chatView.loadMessages(this.bot.getMessage(command));
+        }
+    };
+
     // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendBotMessage = function sendBotMessage(message) {                    // Sends messages as a bot
         if (typeof message === 'string') {
             message = [message];
         }
         for (var i = 0; i < message.length; i++) {
-            this.chatView.loadMessages(this.bot.getMessage(message[i]));
+            if (message[i][0] === '/') {
+                var command = message[i].split(' ')[0];
+                this._execCommand(command, message[i]);
+            } else {
+                this.chatView.loadMessages(this.bot.getMessage(message[i]));
+            }
         }
     };
 
@@ -119,8 +161,10 @@ define(function(require, exports, module) {
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
         if (message[0] === '/') {
             this.sendBotMessage(message);
+        } else if (this.options.user !== '') {
+            this.dweets.sendMessage(Base64.encode(message), this.options.user, this.loadMessages.bind(this));
         } else {
-            this.dweets.sendMessage(Base64.encode(message), md5('yuri@progforce.com'), this.loadMessages.bind(this));
+            this.sendBotMessage('email');
         }
     };
 

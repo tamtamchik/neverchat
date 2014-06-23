@@ -154,6 +154,7 @@ define(function(require, exports, module) {
                 if (this.messagesRaw[i].loaded === false) {
                     this.renderMessage(this.messagesRaw[i].item);
                     this.messagesRaw[i].loaded = true;
+                    this.scrollView.goToNextPage();
                 }
             }
         }
