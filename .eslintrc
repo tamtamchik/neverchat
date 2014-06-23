@@ -28,6 +28,7 @@
         "curly": 0,
         "no-use-before-define": 0,
         "brace-style": 0,
-        no-multi-str: 0
+        no-multi-str: 0,
+        new-cap: 0
     }
 }

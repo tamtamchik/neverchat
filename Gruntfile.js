@@ -17,6 +17,16 @@ module.exports = function(grunt) {
         app: 'app',
         dist: 'dist'
       }
+    },
+    copy: {
+      files: [
+        {
+          expand: true,
+          cwd: 'audio',
+          src: ['**/*'],
+          dest:'audio'
+        }
+      ]
     }
   });
 };
