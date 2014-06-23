@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     // var ImageSurface        = require('famous/surfaces/ImageSurface');
     var ContainerSurface    = require('famous/surfaces/ContainerSurface');
     var HeaderFooter        = require('famous/views/HeaderFooterLayout');
+    // var Timer               = require('famous/utilities/Timer');
 
     // Custom modules
     var ChatHeaderView      = require('views/ChatHeaderView');
@@ -20,10 +21,12 @@ define(function(require, exports, module) {
 
     // =================================================================================================================
     function ChatView() {                                                    // Constructor function for ChatView class
+
         // Defining vars
         this.messages = [];
         this.messagesRaw = [];
         this.latestMessageDate = new Date(-1);
+        this.currentPage = 0;
 
         // Applies View's constructor function to ChatView class
         View.apply(this, arguments);
@@ -116,12 +119,17 @@ define(function(require, exports, module) {
         this.chatHeaderView.bounceTitle();
     }
 
+    function _changePage(change) {
+        this.currentPage += change.direction;
+    }
+
     // =================================================================================================================
                                                                                                       // Events section
 
     // -----------------------------------------------------------------------------------------------------------------
     function _setListeners() {                                                                         // Set listeners
         // TODO: put listeners here
+        this.scrollView.on('pageChange', _changePage.bind(this));
     }
 
     // =================================================================================================================
@@ -143,11 +151,10 @@ define(function(require, exports, module) {
                 }
             }
             for (i = 0; i < this.messagesRaw.length; i++) {
-              if (this.messagesRaw[i].loaded === false) {
-                this.renderMessage(this.messagesRaw[i].item);
-                this.messagesRaw[i].loaded = true;
-                this.scrollView.goToNextPage();
-              }
+                if (this.messagesRaw[i].loaded === false) {
+                    this.renderMessage(this.messagesRaw[i].item);
+                    this.messagesRaw[i].loaded = true;
+                }
             }
         }
     };

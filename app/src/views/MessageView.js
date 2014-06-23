@@ -122,7 +122,7 @@ define(function(require, exports, module) {
         this.messageBox = new Surface({
             classes: ['new'],
             size: [window.innerWidth - this.options.avatarOffset * 3 - this.options.avatarWidth, undefined],
-            content: '<div class="text-surface">' + converter.makeHtml(Base64.decode(this.message.content.message)) + '</div>',
+            content: '<div class="text-surface">' + converter.makeHtml(Base64.decode(this.message.content.message) + '&nbsp;') + '</div>',
             properties: this.options.messageBoxProperties
         });
 

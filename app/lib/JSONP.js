@@ -1,5 +1,5 @@
 var JSONP = function(global){
-    // (C) WebReflection Essential - Mit Style
+  // (C) WebReflection Essential - Mit Style
   // 216 bytes minified + gzipped via Google Closure Compiler
     function JSONP(uri, callback, scope) {
         function JSONPResponse() {
