@@ -106,7 +106,7 @@ define(function(require, exports, module) {
         this.dweets.getFeed(this.loadMessages, this);
     }
 
-    AppView.prototype._setUser = function _saveUser(command, message) {
+    AppView.prototype._setUser = function _setUser(command, message) {
         var user = message.replace(command, '').trim();
         var re   = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (user) {
@@ -121,7 +121,7 @@ define(function(require, exports, module) {
         }
     };
 
-    AppView.prototype._getUser = function _saveUser(message) {
+    AppView.prototype._getUser = function _getUser() {
         if (this.options.user !== '') {
             this.chatView.loadMessages(this.bot.getMessage('getUser', '', '**' + this.options.user + '** !!! :3'));
         } else {
@@ -135,7 +135,7 @@ define(function(require, exports, module) {
                 this._setUser(command, message);
                 break;
             case '/who':
-                this._getUser(command, message);
+                this._getUser();
                 break;
             default:
                 this.chatView.loadMessages(this.bot.getMessage(command));
