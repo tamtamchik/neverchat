@@ -33,7 +33,7 @@ define(function(require, exports, module) {
         this.options.channel += md5('');
         this.dweets = new Dweet(this.options.channel);
 
-        Timer.setInterval(_loadFeed.bind(this), 2000);
+        // Timer.setInterval(_loadFeed.bind(this), 2000);
         Timer.setTimeout(_showLogin.bind(this), 4000);
     }
 
@@ -112,7 +112,7 @@ define(function(require, exports, module) {
         if (user) {
             if (re.test(user)) {
                 this.options.user = md5(user);
-                this.chatView.loadMessages(this.bot.getMessage('setUser', '', '**' + this.options.user + '**'));
+                this.chatView.loadMessages(this.bot.getMessage('setUser'));
             } else {
                 this.chatView.loadMessages(this.bot.getMessage('wrongEmail', '**' + user + '**'));
             }
@@ -121,15 +121,8 @@ define(function(require, exports, module) {
         }
     };
 
-    AppView.prototype._getUser = function _getUser() {
-        if (this.options.user !== '') {
-            this.chatView.loadMessages(this.bot.getMessage('getUser', '', '**' + this.options.user + '** !!! :3'));
-        } else {
-            this.chatView.loadMessages(this.bot.getMessage('noUser'));
-        }
-    };
-
-    AppView.prototype._execCommand = function _execCommand(command, message) {
+    // -----------------------------------------------------------------------------------------------------------------
+    AppView.prototype._execCommand = function _execCommand(command, message) {              // Commands definition
         switch (command) {
             case '/me':
                 this._setUser(command, message);
