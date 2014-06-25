@@ -19,7 +19,7 @@ define(function(require, exports, module) {
             // simple commands
             '/m': 'Meow!!! :3',
             '/help': '**Commands** \n\n* to get ID in the system send `/me me@neverchat.io` (replace `me@neverchat.io` with your email) \n\n* to change room send `/r general` (replace `general` with any room you need) \n\n* to get available commands send `/help` \n\n&nbsp;\n\n**Markdown** \n\n* to make text *cursive* use `*emphasis*`\n\n* to make text **bold** use `**bold**`\n\n* to wrap text into \``code`\` use `` `code` ``, \n\nFull markdown can be found here: [http://daringfireball.net/projects/markdown/syntax](http://daringfireball.net/projects/markdown/syntax)',
-            '404': 'I don\'t know this command... purrr'
+            '404': 'I don\'t know this command... Purrr... Type `/help` to see all available commands, please.'
         };
     }
 
