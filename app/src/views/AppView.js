@@ -30,10 +30,6 @@ define(function(require, exports, module) {
 
         _setListeners.call(this);
 
-        this.options.channel += md5('');
-        this.dweets = new Dweet(this.options.channel);
-
-        // Timer.setInterval(_loadFeed.bind(this), 2000);
         Timer.setTimeout(_showLogin.bind(this), 4000);
     }
 
@@ -45,7 +41,8 @@ define(function(require, exports, module) {
     AppView.DEFAULT_OPTIONS = {                                                    // Default options for AppView class
         animationDuration: 1200,
         channel: 'neverchat_',
-        user: ''
+        user: '',
+        feedUpdateInterval: 2000
     };
 
     // =================================================================================================================
@@ -102,9 +99,25 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    function _loadFeed() {                                                         // Generic function for loading feed
-        this.dweets.getFeed(this.loadMessages, this);
+     AppView.prototype._loadFeed = function _loadFeed() {                          // Generic function for loading feed
+        this.dweets.getFeed(this.loadMessages.bind(this), this);
     }
+
+    AppView.prototype._setRoom = function _setRoom(command, message) {
+        var room = message.replace(command, '').trim();
+        var room_name = (room !== '') ? room  : 'global';
+
+        if (this.options.user !== '') {
+            this.options.channel += md5(room);
+            this.dweets = new Dweet(this.options.channel);
+
+            Timer.setInterval(this._loadFeed.bind(this), this.options.feedUpdateInterval);
+
+            this.chatView.loadMessages(this.bot.getMessage('setRoom','','**' + room_name + '**'));
+        } else {
+            this.sendBotMessage('email');
+        }
+    };
 
     AppView.prototype._setUser = function _setUser(command, message) {
         var user = message.replace(command, '').trim();
@@ -127,8 +140,8 @@ define(function(require, exports, module) {
             case '/me':
                 this._setUser(command, message);
                 break;
-            case '/who':
-                this._getUser();
+            case '/r':
+                this._setRoom(command, message);
                 break;
             default:
                 this.chatView.loadMessages(this.bot.getMessage(command));

@@ -15,6 +15,7 @@ define(function(require, exports, module) {
             'wrongCommand': 'Your command is wrong! T_T Please check `/h` to see command examples...',
             'wrongEmail': ' is not valid email. Please, specify correct one! :3',
             'setUser': 'Hooray! Nice to meet you :3 You can now connect to rooms by typing `/r general`',
+            'setRoom': 'Room changed to: ',
             'noUser': 'I am not alowed to talk to strangers, please introduce yourself. \n\n To do this you need to send this type of message `/me someone@neverchat.io`',
             // simple commands
             '/m': 'Meow!!! :3',
@@ -39,6 +40,7 @@ define(function(require, exports, module) {
         var result  = { with: [{
                 thing: 'message',
                 created: new Date(),
+                internal: true,
                 content: {
                     message: Base64.encode(prefix + text + postfix),
                     user: this.botUser
