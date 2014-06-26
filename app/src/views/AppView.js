@@ -99,13 +99,13 @@ define(function(require, exports, module) {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-     AppView.prototype._loadFeed = function _loadFeed() {                          // Generic function for loading feed
+    AppView.prototype._loadFeed = function _loadFeed() {                           // Generic function for loading feed
         this.dweets.getFeed(this.loadMessages.bind(this), this);
-    }
+    };
 
     AppView.prototype._setRoom = function _setRoom(command, message) {
         var room = message.replace(command, '').trim();
-        var room_name = (room !== '') ? room  : 'global';
+        var roomName = (room !== '') ? room  : 'global';
 
         if (this.options.user !== '') {
             this.options.channel += md5(room);
@@ -113,7 +113,7 @@ define(function(require, exports, module) {
 
             Timer.setInterval(this._loadFeed.bind(this), this.options.feedUpdateInterval);
 
-            this.chatView.loadMessages(this.bot.getMessage('setRoom','','**' + room_name + '**'));
+            this.chatView.loadMessages(this.bot.getMessage('setRoom','','**' + roomName + '**'));
         } else {
             this.sendBotMessage('email');
         }
