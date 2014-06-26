@@ -11,7 +11,7 @@ define(function(require, exports, module) {
     // var ImageSurface        = require('famous/surfaces/ImageSurface');
     var ContainerSurface    = require('famous/surfaces/ContainerSurface');
     var HeaderFooter        = require('famous/views/HeaderFooterLayout');
-    var Timer               = require('famous/utilities/Timer');
+    // var Timer               = require('famous/utilities/Timer');
 
     // Custom modules
     var ChatHeaderView      = require('views/ChatHeaderView');
