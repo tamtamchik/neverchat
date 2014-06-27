@@ -82,6 +82,12 @@ define(function(require, exports, module) {
     function _createBaseSurface() {                                                      // Creates base message surface
         this.container = new ContainerSurface();
 
+        this.containerTranslateModifier = new StateModifier({
+            transform: Transform.translate(window.innerWidth, 0)
+        });
+        this.containerRotateModifier = new StateModifier({
+            transform: Transform.rotateZ(Math.PI)
+        });
         this.containerModifier = new StateModifier();
 
         this.containerModifier.setSize([undefined, this.options.messageMinHeight]);
@@ -95,7 +101,11 @@ define(function(require, exports, module) {
 
         this.container.add(this.layoutModifier).add(this.layout);
         this.container.pipe(this._eventOutput);
-        this.add(this.containerModifier).add(this.container);
+        this
+            .add(this.containerTranslateModifier)
+            .add(this.containerRotateModifier)
+            .add(this.containerModifier)
+            .add(this.container);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

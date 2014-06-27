@@ -99,11 +99,22 @@ define(function(require, exports, module) {
         this.scrollContainer = new ContainerSurface();
         this.scrollView = new ScrollView();
 
-        this.scrollContainerModifier = new StateModifier();
+        this.scrollContainerTranslateModifier = new StateModifier({
+            transform: Transform.translate(window.innerWidth,
+                window.innerHeight - this.options.headerSize - this.options.footerSize * 4)
+        });
+
+        this.scrollContainerRotateModifier = new StateModifier({
+            transform: Transform.rotateZ(Math.PI)
+        });
+
         this.scrollViewModifier = new StateModifier();
 
         this.scrollContainer.add(this.scrollViewModifier).add(this.scrollView);
-        this.layout.content.add(this.scrollContainerModifier).add(this.scrollContainer);
+        this.layout.content
+            .add(this.scrollContainerTranslateModifier)
+            .add(this.scrollContainerRotateModifier)
+            .add(this.scrollContainer);
 
         this.scrollNode = new RenderNode(this.scrollViewModifier);
         this.scrollNode.add(this.scrollView);
@@ -147,7 +158,7 @@ define(function(require, exports, module) {
                         loaded: false,
                         item: res.with[i]
                     };
-                    this.messagesRaw.push(it);
+                    this.messagesRaw.unshift(it);
                     if (!res.with[i].internal) {
                         this.latestMessageDate = created;
                     }
@@ -170,7 +181,7 @@ define(function(require, exports, module) {
         });
 
         surface.pipe(this.scrollView);
-        this.messages.push(surface);
+        this.messages.unshift(surface);
         surface.showMessage();
         this.snd.play();
       }
