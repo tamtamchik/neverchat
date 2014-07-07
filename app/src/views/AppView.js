@@ -1,8 +1,9 @@
-/* globals define, Trianglify, md5, Base64 */
+/* globals define, Trianglify, md5, Base64, filterXSS */
 define(function(require, exports, module) {
 
     // =================================================================================================================
-    var View                = require('famous/core/View');                                     // Require extra modules
+                              require('xss');                                                  // Require extra modules
+    var View                = require('famous/core/View');
     // var Surface              = require('famous/core/Surface');
     var Transform           = require('famous/core/Transform');
     var StateModifier       = require('famous/modifiers/StateModifier');
@@ -169,6 +170,8 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     AppView.prototype.sendMessage = function sendMessage(message) {            // Generic function for sending messages
+        message = filterXSS(message);
+
         if (message[0] === '/') {
             this.sendBotMessage(message);
         } else if (this.options.user !== '') {

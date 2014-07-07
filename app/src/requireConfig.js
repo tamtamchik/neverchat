@@ -14,10 +14,8 @@ require.config({
         trianglify: '../lib/trianglify/trianglify',
         'js-base64': '../lib/js-base64/base64',
         showdown: '../lib/showdown/src/showdown',
-        momentjs: '../lib/momentjs/moment'
-    },
-    packages: [
-
-    ]
+        momentjs: '../lib/momentjs/moment',
+        xss: '../lib/xss/dist/xss'
+    }
 });
 require(['main']);
