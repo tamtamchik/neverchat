@@ -175,16 +175,16 @@ define(function(require, exports, module) {
 
     // -----------------------------------------------------------------------------------------------------------------
     ChatView.prototype.renderMessage = function renderMessage(msg) {                           // Render single message
-      if (msg) {
-        var surface = new MessageView({
-            data: msg
-        });
+        if (msg) {
+            var surface = new MessageView({
+                data: msg
+            });
 
-        surface.pipe(this.scrollView);
-        this.messages.unshift(surface);
-        surface.showMessage();
-        this.snd.play();
-      }
+            surface.pipe(this.scrollView);
+            this.messages.unshift(surface);
+            surface.showMessage();
+            this.snd.play();
+        }
     };
 
     // =================================================================================================================

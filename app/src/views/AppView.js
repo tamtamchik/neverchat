@@ -109,9 +109,13 @@ define(function(require, exports, module) {
 
         if (this.options.user !== '') {
             this.options.channel += md5(room);
+
+            Timer.clear(this.dweetInterval);
+            this.dweets = null;
+
             this.dweets = new Dweet(this.options.channel);
 
-            Timer.setInterval(this._loadFeed.bind(this), this.options.feedUpdateInterval);
+            this.dweetInterval = Timer.setInterval(this._loadFeed.bind(this), this.options.feedUpdateInterval);
 
             this.chatView.loadMessages(this.bot.getMessage('setRoom','','**' + roomName + '**'));
         } else {
